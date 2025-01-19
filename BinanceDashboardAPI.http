@@ -1,0 +1,6 @@
+@BinanceDashboardAPI_HostAddress = http://localhost:5124
+
+GET {{BinanceDashboardAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
