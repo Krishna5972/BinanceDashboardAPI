@@ -8,14 +8,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Clients\**" />
+    <Compile Remove="Common\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Services\**" />
+    <Content Remove="Clients\**" />
+    <Content Remove="Common\**" />
+    <Content Remove="Interfaces\**" />
+    <Content Remove="Models\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Clients\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Clients\**" />
+    <None Remove="Common\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Models\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BinanceApiClient\Clients.csproj" />
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
-    <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="Common\Common.csproj" />
+    <ProjectReference Include="Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="Models\Models.csproj" />
+    <ProjectReference Include="Services\Services.csproj" />
   </ItemGroup>
 
 </Project>
