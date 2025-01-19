@@ -1,15 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Interfaces.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BinanceDashboardAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class AccountController : ControllerBase
-    {
+    {   
+        private readonly IBinanceService _binanceService;
+        public AccountController(IBinanceService binanceService) {
+            _binanceService = binanceService;
+        }
+
+
+
         [HttpGet("GetBalance")]
-        public IActionResult Balance()
+        public async Task<IActionResult> Balance()
         {
-            return new JsonResult(new {balance = 6323});
+            var response = await _binanceService.GetBalanceAsync();
+            return new JsonResult(response);
         }
     }
 }
