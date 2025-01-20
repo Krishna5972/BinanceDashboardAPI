@@ -29,7 +29,7 @@ if (useMock)
 else
 {
     builder.Services.AddScoped<IBinanceService, BinanceService>();
-    builder.Services.AddHostedService<BinanceDataRefreshService>();
+    //builder.Services.AddHostedService<BinanceDataRefreshService>();
 }
 
 

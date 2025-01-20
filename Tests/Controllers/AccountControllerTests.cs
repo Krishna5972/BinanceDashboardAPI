@@ -35,7 +35,7 @@ namespace Tests.Controllers
             _mockBinanceService.Setup(s => s.GetBalanceAsync()).ReturnsAsync(fakeBalance);
 
             // Act
-            var result = await _controller.Balance();
+            var result = await _controller.GetBalance();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);  // Expecting OkObjectResult
@@ -54,7 +54,7 @@ namespace Tests.Controllers
             _mockBinanceService.Setup(s => s.GetBalanceAsync()).ThrowsAsync(new Exception("Service error"));
 
             // Act
-            var result = await _controller.Balance();
+            var result = await _controller.GetBalance();
 
             // Assert
             var objectResult = Assert.IsType<ObjectResult>(result);
@@ -72,7 +72,7 @@ namespace Tests.Controllers
             _mockBinanceService.Setup(s => s.GetBalanceAsync()).ReturnsAsync((FuturesAccountBalanceResponseDto)null);
 
             // Act
-            var result = await _controller.Balance();
+            var result = await _controller.GetBalance();
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -90,7 +90,7 @@ namespace Tests.Controllers
             _mockBinanceService.Setup(s => s.GetBalanceAsync()).ThrowsAsync(new InvalidOperationException("Invalid request."));
 
             // Act
-            var result = await _controller.Balance();
+            var result = await _controller.GetBalance();
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -114,7 +114,7 @@ namespace Tests.Controllers
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
             // Act
-            var result = await _controller.Balance();
+            var result = await _controller.GetBalance();
 
             // Assert
             var objectResult = Assert.IsType<ObjectResult>(result);
@@ -138,7 +138,7 @@ namespace Tests.Controllers
             _mockBinanceService.Setup(s => s.GetBalanceAsync()).ReturnsAsync(fakeBalance);
 
             // Act
-            var result = await _controller.Balance();
+            var result = await _controller.GetBalance();
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
