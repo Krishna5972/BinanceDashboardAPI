@@ -32,6 +32,7 @@ namespace Clients
         {
             queryParams ??= new Dictionary<string, string>();
             queryParams["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+
             queryParams["signature"] = GenerateSignature(queryParams);
 
             var queryString = BuildQueryString(queryParams);

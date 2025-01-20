@@ -10,6 +10,8 @@ namespace Services
 {
     public class BinanceMockService : IBinanceService
     {
+        
+
         public Task<FuturesAccountBalanceResponseDto> GetBalanceAsync()
         {
 
@@ -27,6 +29,31 @@ namespace Services
             };
 
             return Task.FromResult(result);
+        }
+
+        public Task<List<FuturesAccountTradeResponseDto>> GetAccountTradesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<FuturesIncomeHistoryResponseDto>> GetIncomeHistoryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<FutureOpenPositionsResponseDto>> GetOpenPositionsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<FuturesOpenOrdersResponseDto>> GetOpenOrdersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

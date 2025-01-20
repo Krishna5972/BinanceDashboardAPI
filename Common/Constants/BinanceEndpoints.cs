@@ -9,5 +9,9 @@ namespace Common.Constants
     public class BinanceEndpoints
     {
         public const string FuturesBalanceEndpoint = "fapi/v3/balance";
+        public const string FuturesAccountTradesEndpoint = "fapi/v1/userTrades";
+        public const string FuturesIncomeHistoryEndpoint = "/fapi/v1/income";
+        public const string FuturesOpenPositionsEndpoint = "/fapi/v3/positionRisk"; 
+        public const string FuturesOpenOrdersEndpoint = "/fapi/v1/openOrders";
     }
 }
