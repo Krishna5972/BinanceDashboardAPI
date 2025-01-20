@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Clients\Clients.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\DatabaseLayer\Repository.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>

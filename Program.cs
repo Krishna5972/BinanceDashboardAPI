@@ -2,6 +2,9 @@ using Interfaces.Clients;
 using Interfaces.Services;
 using Clients;
 using Services;
+using Interfaces.Repository;
+using DatabaseLayer;
+using Repository.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +25,9 @@ builder.Services.AddMemoryCache();
 
 bool useMock = builder.Configuration.GetValue<bool>("UseMock");
 
-// Register BinanceApiClient with DI
+builder.Services.AddScoped<DbContext>();
 builder.Services.AddScoped<IBinanceApiClient, BinanceApiClient>();
+builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 if (useMock)
     builder.Services.AddScoped<IBinanceService, BinanceMockService>();
 else

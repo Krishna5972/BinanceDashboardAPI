@@ -10,6 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Common.Constants;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Interfaces.Repository;
+using System.Linq;
+using Common.Comparers;
+using System.Text.Json;
+using System.IO;
 
 namespace Services
 {
@@ -18,10 +23,12 @@ namespace Services
         private readonly IBinanceApiClient _binanceApiClient;
         private readonly IMemoryCache _cache;
         private readonly TimeSpan _cacheDuration;
+        private readonly ITradeRepository _tradeRepository;
 
-        public BinanceService(IBinanceApiClient binanceApiClient, IMemoryCache cache, IConfiguration configuration) {
+        public BinanceService(IBinanceApiClient binanceApiClient, IMemoryCache cache, IConfiguration configuration, ITradeRepository tradeRepository) {
             _binanceApiClient = binanceApiClient;
             _cache = cache;
+            _tradeRepository = tradeRepository;
 
             int cacheMinutes = configuration.GetValue<int>("CacheSettings:CacheDurationMinutes", 5);
             _cacheDuration = TimeSpan.FromMinutes(cacheMinutes);
@@ -53,7 +60,7 @@ namespace Services
             return result;
         }
 
-        public async Task<List<FuturesAccountTradeResponseDto>> GetAccountTradesAsync()
+        public virtual async Task<List<FuturesAccountTradeResponseDto>> GetAccountTradesAsync()
         {
             if (_cache.TryGetValue("Binance_Account_Trades", out List<FuturesAccountTradeResponseDto> cachedAccountTrades))
                 return cachedAccountTrades;
@@ -189,13 +196,28 @@ namespace Services
         
         public async Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync()
         {
-            var accountTrades = await GetAccountTradesAsync();
+            List<FuturesAccountTradeResponseDto> accountTrades = await GetAccountTradesAsync();
+            List<FuturesAccountTradeResponseDto> accountTradeDB = (await _tradeRepository.GetAllAccountTradesAsync()).ToList();
 
-            var positions = ProcessTrades(accountTrades);
+
+            List<FuturesAccountTradeResponseDto> combinedTrades = accountTrades
+                                                                    .Concat(accountTradeDB)
+                                                                    .Distinct(new FuturesAccountTradeComparer()) 
+                                                                    .ToList();
+
+            List<PositionHistoryResponseDto> positions = ProcessTrades(combinedTrades);
+
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+
+            File.WriteAllText("accountTrades.json", System.Text.Json.JsonSerializer.Serialize(accountTrades, jsonOptions));
+            File.WriteAllText("accountTradeDB.json", System.Text.Json.JsonSerializer.Serialize(accountTradeDB, jsonOptions));
+            File.WriteAllText("combinedTrades.json", System.Text.Json.JsonSerializer.Serialize(combinedTrades, jsonOptions));
+            File.WriteAllText("positions.json", System.Text.Json.JsonSerializer.Serialize(positions, jsonOptions));
+
+
+
 
             return positions;
-
-
         }
 
 
@@ -221,7 +243,7 @@ namespace Services
 
 
 
-        public List<PositionHistoryResponseDto> ProcessTrades(List<FuturesAccountTradeResponseDto> trades)
+        private List<PositionHistoryResponseDto> ProcessTrades(List<FuturesAccountTradeResponseDto> trades)
         {
             var masterResults = new List<PositionHistoryResponseDto>();
             var issueCoins = new List<string>();
@@ -250,11 +272,15 @@ namespace Services
                     .Where(t => t.PositionSide.Equals("LONG", StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
+                dfLong.Where(x => x.Side == "SELL")
+                      .ToList()
+                      .ForEach(s => s.Quantity = -Math.Abs(s.Quantity));
+
                 bool checkLong = dfLong.Count > 0;
                 if (checkLong)
                 {
                     float sumLongQty = dfLong.Sum(x => x.Quantity);
-                    if (Math.Round(sumLongQty, 8) != 0)
+                    if (Math.Abs(Math.Round(sumLongQty, 8)) >= 9E-4)
                     {
                         issueCoins.Add(coin);
                         checkLong = false;
@@ -271,11 +297,15 @@ namespace Services
                     .Where(t => t.PositionSide.Equals("SHORT", StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
+                dfShort.Where(x => x.Side == "SELL")
+                      .ToList()
+                      .ForEach(s => s.Quantity = -Math.Abs(s.Quantity));
+
                 bool checkShort = dfShort.Count > 0;
                 if (checkShort)
                 {
                     float sumShortQty = dfShort.Sum(x => x.Quantity);
-                    if (Math.Round(sumShortQty, 8) != 0)
+                    if (Math.Abs(Math.Round(sumShortQty, 8)) >= 9E-4)
                     {
                         issueCoins.Add(coin);
                         checkShort = false;
@@ -348,7 +378,7 @@ namespace Services
                     closeTime = row.Time;
 
                     // Check if fully closed
-                    if (Math.Round(currentPosition, 8) == 0)
+                    if (Math.Abs(Math.Round(currentPosition, 8)) < 9E-4 | Math.Abs(Math.Round(currentPosition, 8)) == 0)
                     {
                         var position = new PositionHistoryResponseDto
                         {
@@ -435,7 +465,7 @@ namespace Services
                     closeTime = row.Time;
 
                     // If back to zero -> fully closed
-                    if (Math.Round(currentPosition, 8) == 0)
+                    if (Math.Abs(Math.Round(currentPosition, 8)) < 9E-4)
                     {
                         var position = new PositionHistoryResponseDto
                         {
@@ -464,6 +494,7 @@ namespace Services
 
             return results;
         }
+
 
 
         #endregion private functions
