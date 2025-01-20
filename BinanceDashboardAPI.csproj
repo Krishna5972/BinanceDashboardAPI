@@ -13,21 +13,25 @@
     <Compile Remove="Interfaces\**" />
     <Compile Remove="Models\**" />
     <Compile Remove="Services\**" />
+    <Compile Remove="Tests\**" />
     <Content Remove="Clients\**" />
     <Content Remove="Common\**" />
     <Content Remove="Interfaces\**" />
     <Content Remove="Models\**" />
     <Content Remove="Services\**" />
+    <Content Remove="Tests\**" />
     <EmbeddedResource Remove="Clients\**" />
     <EmbeddedResource Remove="Common\**" />
     <EmbeddedResource Remove="Interfaces\**" />
     <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="Tests\**" />
     <None Remove="Clients\**" />
     <None Remove="Common\**" />
     <None Remove="Interfaces\**" />
     <None Remove="Models\**" />
     <None Remove="Services\**" />
+    <None Remove="Tests\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
