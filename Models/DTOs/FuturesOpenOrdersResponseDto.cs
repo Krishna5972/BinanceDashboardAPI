@@ -15,5 +15,7 @@ namespace Models.DTOs
 
         public string OrderType { get; set; }
 
+        public float Amount { get; set; }
+
     }
 }

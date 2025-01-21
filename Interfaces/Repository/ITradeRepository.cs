@@ -10,5 +10,9 @@ namespace Interfaces.Repository
     public interface ITradeRepository
     {
         Task<IEnumerable<FuturesAccountTradeResponseDto>> GetAllAccountTradesAsync();
+
+        Task<IEnumerable<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync();
+
+        Task<IEnumerable<DailyPNLResponseDTO>> GetDailyPNLAsync();
     }
 }

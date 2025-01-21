@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Models.DTOs
 {
-    public class FuturesAccountBalanceResponseDto
+    public class BalanceSnapshotResponseDto
     {
-        public float Balance { get; set; }
+        public DateOnly Date { get; set; }
 
-        public DateTime UpdateTime { get; set; }
+        public float Balance { get; set; }
     }
 }

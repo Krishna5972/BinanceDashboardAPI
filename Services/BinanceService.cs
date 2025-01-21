@@ -15,6 +15,7 @@ using System.Linq;
 using Common.Comparers;
 using System.Text.Json;
 using System.IO;
+using Common.Constants;
 
 namespace Services
 {
@@ -47,7 +48,7 @@ namespace Services
             var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesBalanceEndpoint);
             List<FuturesAccountBalance> balances = JsonConvert.DeserializeObject<List<FuturesAccountBalance>>(jsonResponse);
 
-            decimal currBalance = balances.Where(x => x.Asset == "USDT").FirstOrDefault()?.CrossWalletBalance ?? 0;
+            float currBalance = balances.Where(x => x.Asset == "USDT").FirstOrDefault()?.CrossWalletBalance ?? 0.0f;
 
             var result = new FuturesAccountBalanceResponseDto()
             {
@@ -108,7 +109,9 @@ namespace Services
 
         public async Task<List<FuturesIncomeHistoryResponseDto>> FetchIncomeHistoryFromBinance()
         {
-            var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesIncomeHistoryEndpoint);
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams["limit"] = "1000";
+            var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesIncomeHistoryEndpoint, queryParams);
             List<FuturesIncomeHistory> cachedIncomeHistory = JsonConvert.DeserializeObject<List<FuturesIncomeHistory>>(jsonResponse);
 
 
@@ -125,7 +128,7 @@ namespace Services
             }).ToList();
 
 
-            
+
             _cache.Set("Binance_Income_History", result, _cacheDuration);
 
             return result;
@@ -158,9 +161,9 @@ namespace Services
                 Notional = Convert.ToSingle(position.Notional)
             }).ToList();
 
-        _cache.Set("Binance_Open_Positions", result, _cacheDuration);
+            _cache.Set("Binance_Open_Positions", result, _cacheDuration);
 
-        return result;
+            return result;
         }
 
         public async Task<List<FuturesOpenOrdersResponseDto>> GetOpenOrdersAsync()
@@ -183,8 +186,9 @@ namespace Services
             {
                 Symbol = order.Symbol,
                 Price = Convert.ToSingle(order.Price) == 0 ? Convert.ToSingle(order.StopPrice) : Convert.ToSingle(order.Price),
-                EntryType = GetOrderType(order.Side,order.PositionSide),
+                EntryType = GetOrderType(order.Side, order.PositionSide),
                 OrderType = order.Type,
+                Amount = Convert.ToSingle(order.OrigQty) * Convert.ToSingle(order.Price),
                 Time = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(order.UpdateTime)).UtcDateTime,
             }).ToList();
 
@@ -193,7 +197,7 @@ namespace Services
             return result;
         }
 
-        
+
         public async Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync()
         {
             List<FuturesAccountTradeResponseDto> accountTrades = await GetAccountTradesAsync();
@@ -202,24 +206,98 @@ namespace Services
 
             List<FuturesAccountTradeResponseDto> combinedTrades = accountTrades
                                                                     .Concat(accountTradeDB)
-                                                                    .Distinct(new FuturesAccountTradeComparer()) 
+                                                                    .Distinct(new FuturesAccountTradeComparer())
                                                                     .ToList();
 
             List<PositionHistoryResponseDto> positions = ProcessTrades(combinedTrades);
 
-            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-
-            File.WriteAllText("accountTrades.json", System.Text.Json.JsonSerializer.Serialize(accountTrades, jsonOptions));
-            File.WriteAllText("accountTradeDB.json", System.Text.Json.JsonSerializer.Serialize(accountTradeDB, jsonOptions));
-            File.WriteAllText("combinedTrades.json", System.Text.Json.JsonSerializer.Serialize(combinedTrades, jsonOptions));
-            File.WriteAllText("positions.json", System.Text.Json.JsonSerializer.Serialize(positions, jsonOptions));
-
-
-
-
             return positions;
         }
 
+        public async Task<List<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync()
+        {
+            List<BalanceSnapshotResponseDto> balanceSnaphot = (await _tradeRepository.GetBalanceSnapshotAsync()).ToList();
+            balanceSnaphot[balanceSnaphot.Count - 1].Balance = (await GetBalanceAsync()).Balance;
+            return balanceSnaphot;
+        }
+
+        public async Task<List<DailyPNLResponseDTO>> GetDailyPNLAsync()
+        {
+            List<DailyPNLResponseDTO> dailyPNL = (await _tradeRepository.GetDailyPNLAsync()).ToList();
+            List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
+
+            float todayIncome = incomeHistory.Where(x => x.Time.Day == DateTime.Now.Day).ToList().Sum(t => t.Income);
+
+            dailyPNL[dailyPNL.Count - 1].PNL = todayIncome;
+
+            return dailyPNL;
+
+        }
+
+        public async Task<List<MonthlySummaryResponseDto>> GetMonthlySummaryAsync()
+        {
+            List<DailyPNLResponseDTO> dailyPNL = await GetDailyPNLAsync();
+
+            var monthlySummaryList = dailyPNL
+                                        .GroupBy(x => new { x.Date.Year, x.Date.Month })
+                                        .Select(g => new MonthlySummaryResponseDto
+                                        {
+                                            Year = (short)g.Key.Year,
+                                            Month = (short)g.Key.Month,
+                                            PNL = g.Sum(x => x.PNL),
+                                            DailyAverage = g.Sum(x => x.PNL) / g.Count()
+                                        })
+                                        .ToList();
+            return monthlySummaryList;
+        }
+
+
+        public async Task<List<HistoryResponseDto>> GetHistoryAsync()
+        {
+            List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
+            var cutoffDate = DateTime.UtcNow.AddDays(-BinanceServiceConstants.DAYS_TO_FETCH);
+
+            var lastSixDays = incomeHistory
+                .Where(i => i.Time >= cutoffDate)
+                .ToList();
+
+            var dailyData = lastSixDays
+                .GroupBy(i => new { i.Time.Year, i.Time.Month, i.Time.Day })
+                .Select(g => {
+                    var commissionsForDay = g.Where(i =>
+                        i.IncomeType == BinanceServiceConstants.FUNDING_FEE || i.IncomeType == BinanceServiceConstants.COMMISSION)
+                        .Sum(x => x.Income);
+
+                    var pnlForDay = g.Where(i =>
+                        i.IncomeType == BinanceServiceConstants.REALIZED_PNL)
+                        .Sum(x => x.Income);
+
+                    var totalIncome = commissionsForDay + pnlForDay;
+
+                    return new HistoryResponseDto
+                    {
+                        Date = new DateOnly(g.Key.Year, g.Key.Month, g.Key.Day),
+                        Data = new HistorySummary
+                        {
+                            commision = commissionsForDay,
+                            PNL = pnlForDay,
+                            income = totalIncome,
+                            multipler = totalIncome * BinanceServiceConstants.INCOME_MULTIPLIER
+                        }
+                    };
+                })
+                .ToList();
+
+            return dailyData;
+        }
+
+        public Task<DateTime> GetLastUpdatedTime()
+        {
+            if (_cache.TryGetValue("Last_Updated_Time", out DateTime cachedLastUpdatedTime))
+                return Task.FromResult(cachedLastUpdatedTime);
+
+            return Task.FromResult(DateTime.Now);
+        }
 
         #region private functions
 
@@ -277,15 +355,7 @@ namespace Services
                       .ForEach(s => s.Quantity = -Math.Abs(s.Quantity));
 
                 bool checkLong = dfLong.Count > 0;
-                if (checkLong)
-                {
-                    float sumLongQty = dfLong.Sum(x => x.Quantity);
-                    if (Math.Abs(Math.Round(sumLongQty, 8)) >= 9E-4)
-                    {
-                        issueCoins.Add(coin);
-                        checkLong = false;
-                    }
-                }
+                
                 if (checkLong)
                 {
                     var positionsLong = GetPositionsCoinLong(dfLong);
@@ -302,15 +372,6 @@ namespace Services
                       .ForEach(s => s.Quantity = -Math.Abs(s.Quantity));
 
                 bool checkShort = dfShort.Count > 0;
-                if (checkShort)
-                {
-                    float sumShortQty = dfShort.Sum(x => x.Quantity);
-                    if (Math.Abs(Math.Round(sumShortQty, 8)) >= 9E-4)
-                    {
-                        issueCoins.Add(coin);
-                        checkShort = false;
-                    }
-                }
                 if (checkShort)
                 {
                     var positionsShort = GetPositionsCoinShort(dfShort);
@@ -494,6 +555,17 @@ namespace Services
 
             return results;
         }
+
+        
+
+
+
+
+
+
+
+
+
 
 
 

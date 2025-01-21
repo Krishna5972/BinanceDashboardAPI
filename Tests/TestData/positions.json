@@ -162,6 +162,33 @@
     "PNL": -82.2
   },
   {
+    "Symbol": "XRPUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 2.36185,
+    "AvgClosePrice": 2.3105,
+    "OpenTime": "2024-12-19T08:02:08.202Z",
+    "CloseTime": "2024-12-19T15:15:00.67Z",
+    "PNL": 19.67
+  },
+  {
+    "Symbol": "XRPUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.3082,
+    "AvgClosePrice": 2.2379,
+    "OpenTime": "2024-12-19T15:15:01.896Z",
+    "CloseTime": "2024-12-19T23:59:54.368Z",
+    "PNL": -19.17
+  },
+  {
+    "Symbol": "OMUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 3.9805536,
+    "AvgClosePrice": 4.0737944,
+    "OpenTime": "2024-12-20T00:00:49.258Z",
+    "CloseTime": "2024-12-20T04:30:00.891Z",
+    "PNL": 14.75
+  },
+  {
     "Symbol": "USUALUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 1.4303601,
@@ -207,6 +234,15 @@
     "PNL": 23.31
   },
   {
+    "Symbol": "IOUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 3.1291602,
+    "AvgClosePrice": 2.9442,
+    "OpenTime": "2024-12-20T23:59:55.193Z",
+    "CloseTime": "2024-12-21T12:11:09.023Z",
+    "PNL": 86.6
+  },
+  {
     "Symbol": "XRPUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 2.2763,
@@ -214,6 +250,15 @@
     "OpenTime": "2024-12-21T00:00:56.59Z",
     "CloseTime": "2024-12-21T12:15:00.439Z",
     "PNL": -0.66
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.772233,
+    "AvgClosePrice": 2.7783334,
+    "OpenTime": "2024-12-21T19:21:23.762Z",
+    "CloseTime": "2024-12-21T19:55:02.849Z",
+    "PNL": 0.11
   },
   {
     "Symbol": "IOUSDT",
@@ -235,6 +280,42 @@
   },
   {
     "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.7772,
+    "AvgClosePrice": 2.7747,
+    "OpenTime": "2024-12-21T20:03:04.161Z",
+    "CloseTime": "2024-12-21T20:04:01.83Z",
+    "PNL": -0.03
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.775,
+    "AvgClosePrice": 2.7753,
+    "OpenTime": "2024-12-21T20:04:04.131Z",
+    "CloseTime": "2024-12-21T20:05:01.242Z",
+    "PNL": 0
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.77675,
+    "AvgClosePrice": 2.7721,
+    "OpenTime": "2024-12-21T20:05:03.822Z",
+    "CloseTime": "2024-12-21T20:06:00.925Z",
+    "PNL": -0.06
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.7731333,
+    "AvgClosePrice": 2.8193998,
+    "OpenTime": "2024-12-21T20:06:03.194Z",
+    "CloseTime": "2024-12-21T20:34:01.829Z",
+    "PNL": 0.55
+  },
+  {
+    "Symbol": "IOUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 2.80165,
     "AvgClosePrice": 2.81915,
@@ -245,11 +326,11 @@
   {
     "Symbol": "IOUSDT",
     "PositionSide": "LONG",
-    "EntryPrice": 2.7829955,
-    "AvgClosePrice": 2.8055294,
-    "OpenTime": "2024-12-21T19:21:23.762Z",
+    "EntryPrice": 2.8172002,
+    "AvgClosePrice": 2.8295143,
+    "OpenTime": "2024-12-21T20:34:04.409Z",
     "CloseTime": "2024-12-21T20:39:02.865Z",
-    "PNL": 0.87
+    "PNL": 0.29
   },
   {
     "Symbol": "IOUSDT",
@@ -280,6 +361,24 @@
   },
   {
     "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.8048887,
+    "AvgClosePrice": 2.810425,
+    "OpenTime": "2024-12-21T21:07:04.871Z",
+    "CloseTime": "2024-12-21T21:25:02.046Z",
+    "PNL": 0.28
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.797,
+    "AvgClosePrice": 2.8122,
+    "OpenTime": "2024-12-21T21:32:24.288Z",
+    "CloseTime": "2024-12-21T21:35:01.887Z",
+    "PNL": 0.18
+  },
+  {
+    "Symbol": "IOUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 2.8098001,
     "AvgClosePrice": 2.8120334,
@@ -298,6 +397,24 @@
   },
   {
     "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.7912,
+    "AvgClosePrice": 2.8016,
+    "OpenTime": "2024-12-21T21:38:03.842Z",
+    "CloseTime": "2024-12-21T21:46:01.67Z",
+    "PNL": 0.12
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.7939,
+    "AvgClosePrice": 2.7992334,
+    "OpenTime": "2024-12-21T21:47:26.874Z",
+    "CloseTime": "2024-12-21T21:48:01.952Z",
+    "PNL": 0.06
+  },
+  {
+    "Symbol": "IOUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 2.8040667,
     "AvgClosePrice": 2.7998,
@@ -307,21 +424,48 @@
   },
   {
     "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.7974,
+    "AvgClosePrice": 2.7931,
+    "OpenTime": "2024-12-21T21:50:03.319Z",
+    "CloseTime": "2024-12-21T21:53:01.802Z",
+    "PNL": -0.05
+  },
+  {
+    "Symbol": "IOUSDT",
     "PositionSide": "SHORT",
-    "EntryPrice": 2.8014998,
+    "EntryPrice": 2.8040667,
     "AvgClosePrice": 2.7935667,
-    "OpenTime": "2024-12-21T21:48:46.188Z",
-    "CloseTime": "2024-12-21T22:33:51.033Z",
+    "OpenTime": "2024-12-21T21:48:45.859Z",
+    "CloseTime": "2024-12-21T21:53:02.128Z",
     "PNL": 0.25
   },
   {
     "Symbol": "IOUSDT",
     "PositionSide": "LONG",
-    "EntryPrice": 2.7993114,
-    "AvgClosePrice": 2.8056867,
-    "OpenTime": "2024-12-21T21:07:04.871Z",
+    "EntryPrice": 2.7969334,
+    "AvgClosePrice": 2.7938,
+    "OpenTime": "2024-12-21T21:53:05.049Z",
+    "CloseTime": "2024-12-21T22:01:03.575Z",
+    "PNL": -0.11
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.79697,
+    "AvgClosePrice": 2.8157,
+    "OpenTime": "2024-12-21T22:07:55.36Z",
     "CloseTime": "2024-12-21T22:39:40.1Z",
-    "PNL": 1.89
+    "PNL": 1.41
+  },
+  {
+    "Symbol": "IOUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 2.7989998,
+    "AvgClosePrice": 2.8157501,
+    "OpenTime": "2024-12-21T22:33:51.033Z",
+    "CloseTime": "2024-12-21T22:39:40.425Z",
+    "PNL": -0.2
   },
   {
     "Symbol": "AGLDUSDT",
@@ -477,6 +621,24 @@
     "PNL": 5.53
   },
   {
+    "Symbol": "SUIUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 4.5437,
+    "AvgClosePrice": 4.3567,
+    "OpenTime": "2024-12-22T09:45:02.361Z",
+    "CloseTime": "2024-12-22T14:30:00.723Z",
+    "PNL": 13.58
+  },
+  {
+    "Symbol": "SUIUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 4.31316,
+    "AvgClosePrice": 4.3212,
+    "OpenTime": "2024-12-22T14:30:02.031Z",
+    "CloseTime": "2024-12-22T23:59:54.007Z",
+    "PNL": 5.86
+  },
+  {
     "Symbol": "DOGEUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 0.32022,
@@ -585,6 +747,15 @@
     "PNL": 1.34
   },
   {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 1.215125,
+    "AvgClosePrice": 1.2874,
+    "OpenTime": "2024-12-24T23:59:56.657Z",
+    "CloseTime": "2024-12-25T00:20:22.028Z",
+    "PNL": 28.06
+  },
+  {
     "Symbol": "HBARUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 0.330535,
@@ -601,6 +772,15 @@
     "OpenTime": "2024-12-25T02:45:02.084Z",
     "CloseTime": "2024-12-25T10:00:01.012Z",
     "PNL": 16.82
+  },
+  {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 1.1416,
+    "AvgClosePrice": 1.1883,
+    "OpenTime": "2024-12-25T13:30:28.872Z",
+    "CloseTime": "2024-12-25T23:59:54.321Z",
+    "PNL": 35.43
   },
   {
     "Symbol": "HBARUSDT",
@@ -675,6 +855,15 @@
     "PNL": -0.02
   },
   {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 0.9770667,
+    "AvgClosePrice": 0.96871114,
+    "OpenTime": "2024-12-26T23:59:55.853Z",
+    "CloseTime": "2024-12-27T00:52:56.661Z",
+    "PNL": 4.61
+  },
+  {
     "Symbol": "USDCUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 1.000565,
@@ -720,6 +909,15 @@
     "PNL": 32.77
   },
   {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 3.5632749,
+    "AvgClosePrice": 3.4163,
+    "OpenTime": "2024-12-28T00:00:58.348Z",
+    "CloseTime": "2024-12-28T02:15:02.392Z",
+    "PNL": 13.62
+  },
+  {
     "Symbol": "ZENUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 29.68,
@@ -730,12 +928,21 @@
   },
   {
     "Symbol": "VIRTUALUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 3.3883,
+    "AvgClosePrice": 3.4359446,
+    "OpenTime": "2024-12-28T02:15:03.582Z",
+    "CloseTime": "2024-12-28T23:00:00.988Z",
+    "PNL": 39.01
+  },
+  {
+    "Symbol": "VIRTUALUSDT",
     "PositionSide": "SHORT",
-    "EntryPrice": 3.48685,
-    "AvgClosePrice": 3.4115667,
-    "OpenTime": "2024-12-28T00:00:58.348Z",
+    "EntryPrice": 3.4358997,
+    "AvgClosePrice": 3.4092,
+    "OpenTime": "2024-12-28T23:00:02.041Z",
     "CloseTime": "2024-12-28T23:59:54.639Z",
-    "PNL": 16.17
+    "PNL": 2.55
   },
   {
     "Symbol": "GMTUSDT",
@@ -745,6 +952,15 @@
     "OpenTime": "2024-12-28T14:31:30.024Z",
     "CloseTime": "2024-12-28T23:59:55.542Z",
     "PNL": -36.79
+  },
+  {
+    "Symbol": "ZENUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 30.932,
+    "AvgClosePrice": 30.648834,
+    "OpenTime": "2024-12-28T22:00:54.525Z",
+    "CloseTime": "2024-12-28T23:59:56.051Z",
+    "PNL": 9.05
   },
   {
     "Symbol": "MOCAUSDT",
@@ -792,6 +1008,24 @@
     "PNL": -34.7
   },
   {
+    "Symbol": "DEXEUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 14.262285,
+    "AvgClosePrice": 13.982412,
+    "OpenTime": "2024-12-29T12:35:49.906Z",
+    "CloseTime": "2024-12-29T12:40:23.569Z",
+    "PNL": -47.42
+  },
+  {
+    "Symbol": "DEXEUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 13.970668,
+    "AvgClosePrice": 13.521958,
+    "OpenTime": "2024-12-29T12:40:31.493Z",
+    "CloseTime": "2024-12-29T14:18:15.136Z",
+    "PNL": 133.75
+  },
+  {
     "Symbol": "MOCAUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 0.3169,
@@ -817,6 +1051,15 @@
     "OpenTime": "2024-12-29T23:59:56.948Z",
     "CloseTime": "2024-12-30T01:40:28.211Z",
     "PNL": 171.4
+  },
+  {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 3.59614,
+    "AvgClosePrice": 3.51015,
+    "OpenTime": "2024-12-30T00:00:58.116Z",
+    "CloseTime": "2024-12-30T03:30:01.143Z",
+    "PNL": 7.89
   },
   {
     "Symbol": "SXPUSDT",
@@ -873,6 +1116,15 @@
     "PNL": 0.12
   },
   {
+    "Symbol": "SXPUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 0.37829998,
+    "AvgClosePrice": 0.3774,
+    "OpenTime": "2024-12-30T08:27:04.416Z",
+    "CloseTime": "2024-12-30T08:36:01.96Z",
+    "PNL": 1.69
+  },
+  {
     "Symbol": "STEEMUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 0.27918887,
@@ -880,6 +1132,24 @@
     "OpenTime": "2024-12-29T23:59:57.081Z",
     "CloseTime": "2024-12-30T09:17:03.025Z",
     "PNL": 124.08
+  },
+  {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 3.4890752,
+    "AvgClosePrice": 3.4902,
+    "OpenTime": "2024-12-30T03:30:02.391Z",
+    "CloseTime": "2024-12-30T19:30:01.031Z",
+    "PNL": 12.75
+  },
+  {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 3.526625,
+    "AvgClosePrice": 3.5103781,
+    "OpenTime": "2024-12-30T19:30:02.123Z",
+    "CloseTime": "2024-12-30T23:59:57.29Z",
+    "PNL": 9.93
   },
   {
     "Symbol": "SXPUSDT",
@@ -936,6 +1206,15 @@
     "PNL": -5.57
   },
   {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 3.9552002,
+    "AvgClosePrice": 3.9166942,
+    "OpenTime": "2025-01-01T00:00:50.192Z",
+    "CloseTime": "2025-01-01T12:00:02.953Z",
+    "PNL": 14.38
+  },
+  {
     "Symbol": "TROYUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 0.0060945,
@@ -943,6 +1222,24 @@
     "OpenTime": "2024-12-31T23:59:58.191Z",
     "CloseTime": "2025-01-01T14:25:37.036Z",
     "PNL": 35.95
+  },
+  {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 3.9165998,
+    "AvgClosePrice": 4.071017,
+    "OpenTime": "2025-01-01T12:00:04.355Z",
+    "CloseTime": "2025-01-01T19:00:00.806Z",
+    "PNL": 26.03
+  },
+  {
+    "Symbol": "VIRTUALUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 4.15125,
+    "AvgClosePrice": 4.6261663,
+    "OpenTime": "2025-01-01T19:00:02.116Z",
+    "CloseTime": "2025-01-01T23:59:54.682Z",
+    "PNL": -77.04
   },
   {
     "Symbol": "CELRUSDT",
@@ -1015,6 +1312,15 @@
     "OpenTime": "2025-01-02T23:59:54.736Z",
     "CloseTime": "2025-01-03T09:11:30.023Z",
     "PNL": -176.33
+  },
+  {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 1.3395,
+    "AvgClosePrice": 1.4192,
+    "OpenTime": "2025-01-02T23:59:54.575Z",
+    "CloseTime": "2025-01-03T09:40:41.252Z",
+    "PNL": 37.56
   },
   {
     "Symbol": "TROYUSDT",
@@ -1150,6 +1456,15 @@
     "OpenTime": "2025-01-04T00:00:58.305Z",
     "CloseTime": "2025-01-04T00:45:00.579Z",
     "PNL": 5.52
+  },
+  {
+    "Symbol": "AI16ZUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 2.1030624,
+    "AvgClosePrice": 1.995,
+    "OpenTime": "2025-01-03T23:59:58.103Z",
+    "CloseTime": "2025-01-04T02:16:28.279Z",
+    "PNL": 27.32
   },
   {
     "Symbol": "STEEMUSDT",
@@ -1386,6 +1701,15 @@
     "PNL": -5.51
   },
   {
+    "Symbol": "RENDERUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 8.889,
+    "AvgClosePrice": 8.674399,
+    "OpenTime": "2025-01-07T00:00:59.097Z",
+    "CloseTime": "2025-01-07T03:00:01.159Z",
+    "PNL": 7.97
+  },
+  {
     "Symbol": "HIVEUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 0.6161,
@@ -1406,11 +1730,11 @@
   {
     "Symbol": "FARTCOINUSDT",
     "PositionSide": "SHORT",
-    "EntryPrice": 1.1102778,
-    "AvgClosePrice": 1.0040083,
-    "OpenTime": "2024-12-26T23:59:55.853Z",
+    "EntryPrice": 1.1768833,
+    "AvgClosePrice": 1.1099,
+    "OpenTime": "2025-01-06T23:59:58.153Z",
     "CloseTime": "2025-01-07T21:55:48.16Z",
-    "PNL": 119.11
+    "PNL": 114.5
   },
   {
     "Symbol": "GRIFFAINUSDT",
@@ -1420,6 +1744,15 @@
     "OpenTime": "2025-01-06T23:59:57.99Z",
     "CloseTime": "2025-01-07T23:59:55.822Z",
     "PNL": -90.28
+  },
+  {
+    "Symbol": "RENDERUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 8.651364,
+    "AvgClosePrice": 8.0945,
+    "OpenTime": "2025-01-07T03:00:02.48Z",
+    "CloseTime": "2025-01-07T23:59:56.455Z",
+    "PNL": -66.8
   },
   {
     "Symbol": "STEEMUSDT",
@@ -1521,6 +1854,15 @@
     "PNL": -0.03
   },
   {
+    "Symbol": "GASUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 5.39,
+    "AvgClosePrice": 5.2434998,
+    "OpenTime": "2025-01-08T16:59:22.115Z",
+    "CloseTime": "2025-01-08T17:32:31.276Z",
+    "PNL": -33.22
+  },
+  {
     "Symbol": "HIVEUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 0.55437845,
@@ -1566,15 +1908,6 @@
     "PNL": -287.1
   },
   {
-    "Symbol": "GASUSDT",
-    "PositionSide": "LONG",
-    "EntryPrice": 6.034,
-    "AvgClosePrice": 5.804,
-    "OpenTime": "2025-01-09T02:51:41.869Z",
-    "CloseTime": "2025-01-09T04:17:13.027Z",
-    "PNL": -9.28
-  },
-  {
     "Symbol": "XRPUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 2.374,
@@ -1595,11 +1928,11 @@
   {
     "Symbol": "GASUSDT",
     "PositionSide": "LONG",
-    "EntryPrice": 6.051834,
-    "AvgClosePrice": 5.8005,
-    "OpenTime": "2025-01-09T09:13:54.069Z",
-    "CloseTime": "2025-01-09T14:37:37.023Z",
-    "PNL": -15.15
+    "EntryPrice": 5.9987855,
+    "AvgClosePrice": 5.790428,
+    "OpenTime": "2025-01-09T02:45:03.084Z",
+    "CloseTime": "2025-01-09T23:59:55.284Z",
+    "PNL": -50.74
   },
   {
     "Symbol": "IOSTUSDT",
@@ -1846,6 +2179,15 @@
   },
   {
     "Symbol": "XRPUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 2.4879,
+    "AvgClosePrice": 2.5486,
+    "OpenTime": "2025-01-12T09:45:01.971Z",
+    "CloseTime": "2025-01-12T19:30:00.911Z",
+    "PNL": 16.1
+  },
+  {
+    "Symbol": "XRPUSDT",
     "PositionSide": "SHORT",
     "EntryPrice": 2.5488,
     "AvgClosePrice": 2.4967,
@@ -1917,6 +2259,15 @@
     "PNL": -119.93
   },
   {
+    "Symbol": "ONTUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 0.26356664,
+    "AvgClosePrice": 0.2533,
+    "OpenTime": "2025-01-13T04:59:08.155Z",
+    "CloseTime": "2025-01-13T16:21:52.029Z",
+    "PNL": -38.75
+  },
+  {
     "Symbol": "BCHUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 445.00122,
@@ -1933,6 +2284,15 @@
     "OpenTime": "2025-01-13T11:10:23.458Z",
     "CloseTime": "2025-01-13T21:00:00.758Z",
     "PNL": -47.98
+  },
+  {
+    "Symbol": "ONTUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 0.2513,
+    "AvgClosePrice": 0.268,
+    "OpenTime": "2025-01-13T16:59:07.697Z",
+    "CloseTime": "2025-01-13T22:30:46.029Z",
+    "PNL": 47.8
   },
   {
     "Symbol": "BCHUSDT",
@@ -1971,6 +2331,24 @@
     "PNL": 6.26
   },
   {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 1.0543333,
+    "AvgClosePrice": 1.1409,
+    "OpenTime": "2025-01-13T23:59:55.211Z",
+    "CloseTime": "2025-01-14T09:25:12.914Z",
+    "PNL": 130.04
+  },
+  {
+    "Symbol": "OMUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 3.7319815,
+    "AvgClosePrice": 3.68837,
+    "OpenTime": "2025-01-14T04:00:04.284Z",
+    "CloseTime": "2025-01-14T23:59:55.175Z",
+    "PNL": -3.86
+  },
+  {
     "Symbol": "VANAUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 12.883,
@@ -1978,6 +2356,15 @@
     "OpenTime": "2025-01-14T04:59:08.649Z",
     "CloseTime": "2025-01-14T23:59:55.784Z",
     "PNL": -6.79
+  },
+  {
+    "Symbol": "ONTUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 0.25107145,
+    "AvgClosePrice": 0.2566,
+    "OpenTime": "2025-01-14T08:59:07.995Z",
+    "CloseTime": "2025-01-14T23:59:56.554Z",
+    "PNL": 44.4
   },
   {
     "Symbol": "1000CHEEMSUSDT",
@@ -2014,6 +2401,24 @@
     "OpenTime": "2025-01-15T00:00:50.163Z",
     "CloseTime": "2025-01-15T05:30:03.468Z",
     "PNL": 4.62
+  },
+  {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 1.02,
+    "AvgClosePrice": 0.9678,
+    "OpenTime": "2025-01-14T23:59:58.689Z",
+    "CloseTime": "2025-01-15T09:43:11.557Z",
+    "PNL": 26.03
+  },
+  {
+    "Symbol": "FARTCOINUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 1.0626,
+    "AvgClosePrice": 1.1494,
+    "OpenTime": "2025-01-15T13:30:17.051Z",
+    "CloseTime": "2025-01-15T13:40:39.05Z",
+    "PNL": -76.27
   },
   {
     "Symbol": "KASUSDT",
@@ -2104,6 +2509,24 @@
     "OpenTime": "2025-01-16T04:50:01.065Z",
     "CloseTime": "2025-01-16T23:59:54.48Z",
     "PNL": -132.76
+  },
+  {
+    "Symbol": "ALGOUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 0.45546666,
+    "AvgClosePrice": 0.4641,
+    "OpenTime": "2025-01-16T04:15:02.614Z",
+    "CloseTime": "2025-01-16T23:59:54.947Z",
+    "PNL": -8.22
+  },
+  {
+    "Symbol": "MORPHOUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 3.687107,
+    "AvgClosePrice": 3.9101,
+    "OpenTime": "2025-01-16T23:59:55.413Z",
+    "CloseTime": "2025-01-17T01:37:37.169Z",
+    "PNL": 27.11
   },
   {
     "Symbol": "HBARUSDT",
@@ -2223,6 +2646,24 @@
     "PNL": -83.54
   },
   {
+    "Symbol": "TRUMPUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 29.743834,
+    "AvgClosePrice": 28.4118,
+    "OpenTime": "2025-01-18T23:17:17.444Z",
+    "CloseTime": "2025-01-18T23:59:55.271Z",
+    "PNL": -50.78
+  },
+  {
+    "Symbol": "VANAUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 10.925617,
+    "AvgClosePrice": 11.141858,
+    "OpenTime": "2025-01-18T16:56:48.588Z",
+    "CloseTime": "2025-01-18T23:59:55.734Z",
+    "PNL": -22.53
+  },
+  {
     "Symbol": "JUPUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 1.1455,
@@ -2241,6 +2682,24 @@
     "PNL": -114.04
   },
   {
+    "Symbol": "TRUMPUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 26.4212,
+    "AvgClosePrice": 29.598,
+    "OpenTime": "2025-01-19T00:59:58.373Z",
+    "CloseTime": "2025-01-19T03:32:12.133Z",
+    "PNL": 117.21
+  },
+  {
+    "Symbol": "SUIUSDT",
+    "PositionSide": "SHORT",
+    "EntryPrice": 5.0108,
+    "AvgClosePrice": 4.8595,
+    "OpenTime": "2025-01-19T00:01:03.682Z",
+    "CloseTime": "2025-01-19T03:45:00.823Z",
+    "PNL": 9.97
+  },
+  {
     "Symbol": "JUPUSDT",
     "PositionSide": "LONG",
     "EntryPrice": 1.0768,
@@ -2248,6 +2707,15 @@
     "OpenTime": "2025-01-19T02:50:25.699Z",
     "CloseTime": "2025-01-19T11:07:33.227Z",
     "PNL": 91.65
+  },
+  {
+    "Symbol": "SUIUSDT",
+    "PositionSide": "LONG",
+    "EntryPrice": 4.81895,
+    "AvgClosePrice": 4.9835,
+    "OpenTime": "2025-01-19T03:45:02.05Z",
+    "CloseTime": "2025-01-19T18:15:00.763Z",
+    "PNL": 27.77
   },
   {
     "Symbol": "SUIUSDT",

@@ -20,7 +20,7 @@ namespace Services
             decimal minBalance = 1000m;
             decimal maxBalance = 5000m;
 
-            decimal randomBalance = (decimal)(random.NextDouble() * (double)(maxBalance - minBalance) + (double)minBalance);
+            float randomBalance = (float)(random.NextDouble() * (double)(maxBalance - minBalance) + (double)minBalance);
 
             FuturesAccountBalanceResponseDto result = new FuturesAccountBalanceResponseDto()
             {
@@ -52,6 +52,31 @@ namespace Services
         }
 
         public Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<DailyPNLResponseDTO>> GetDailyPNLAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<MonthlySummaryResponseDto>> GetMonthlySummaryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<HistoryResponseDto>> GetHistoryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<DateTime> GetLastUpdatedTime()
         {
             throw new NotImplementedException();
         }
