@@ -140,7 +140,8 @@ namespace DatabaseLayer
                                 PNL = reader["TotalIncome"] != DBNull.Value ? Convert.ToSingle(reader["TotalIncome"]) : 0f,
                                 Date = reader["TransactionDate"] != DBNull.Value
                                          ? DateOnly.FromDateTime(Convert.ToDateTime(reader["TransactionDate"]))
-                                         : DateOnly.MinValue
+                                         : DateOnly.MinValue,
+                                LastUpdated = reader["LastUpdated"]!= DBNull.Value ? Convert.ToDateTime(reader["TransactionDate"]) : DateTime.MinValue
                             };
 
                             dailyPNLList.Add(dailyPNL);

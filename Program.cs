@@ -47,7 +47,7 @@ if (app.Environment.IsDevelopment())
     Console.WriteLine("Developement");
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

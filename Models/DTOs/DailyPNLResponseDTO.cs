@@ -11,5 +11,7 @@ namespace Models.DTOs
         public DateOnly Date { get; set; }
 
         public float PNL { get; set; }
+
+        public DateTime LastUpdated { get; set; }
     }
 }

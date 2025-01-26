@@ -549,9 +549,9 @@ namespace BinanceDashboardAPI.Controllers
             {
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
 
-                var response = await _binanceService.GetLastUpdatedTime().WaitAsync(cts.Token);
+                var dateTime = await _binanceService.GetLastUpdatedTime().WaitAsync(cts.Token);
 
-                return Ok(response);
+                return Ok(new {LastUpdatedTime = dateTime });
             }
             catch (InvalidOperationException ex)
             {
