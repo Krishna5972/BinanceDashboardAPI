@@ -5,8 +5,8 @@
 - [ Done ] Verify the default cache duration is set from the configuration when not provided.
 
 ## 2. Caching Behavior Tests
-- [ ] Confirm that each "Get" method (e.g., `GetBalanceAsync`, `GetAccountTradesAsync`) returns the cached result if available.
-- [ ] Validate that when the cache is empty or expired, the service fetches fresh data from the API client and stores it in the cache.
+- [ Done ] Confirm that each "Get" method (e.g., `GetBalanceAsync`, `GetAccountTradesAsync`) returns the cached result if available.
+- [Done  ] Validate that when the cache is empty or expired, the service fetches fresh data from the API client and stores it in the cache.
 
 ## 3. Balance Retrieval Tests
 - [ ] Test `GetBalanceAsync` to ensure it retrieves the correct balance when the cache is empty.
