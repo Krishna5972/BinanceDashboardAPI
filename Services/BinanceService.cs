@@ -34,18 +34,33 @@ namespace Services
             int cacheMinutes = configuration.GetValue<int>("CacheSettings:CacheDurationMinutes", 5);
             _cacheDuration = TimeSpan.FromMinutes(cacheMinutes);
         }
-        public async Task<FuturesAccountBalanceResponseDto> GetBalanceAsync()
+        public virtual async Task<FuturesAccountBalanceResponseDto> GetBalanceAsync()
         {
-            if (_cache.TryGetValue("Binance_Balance", out FuturesAccountBalanceResponseDto cachedBalance))
+            if (_cache.TryGetValue(CacheKeys.BinanceBalance, out FuturesAccountBalanceResponseDto cachedBalance))
                 return cachedBalance;
 
             var response = await FetchBalanceFromBinance();
+
+            _cache.Set(CacheKeys.BinanceBalance, response, _cacheDuration);
+
             return response;
         }
 
-        public async Task<FuturesAccountBalanceResponseDto> FetchBalanceFromBinance()
+
+        public virtual async Task<FuturesAccountBalanceResponseDto> FetchBalanceFromBinance()
         {
             var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesBalanceEndpoint);
+
+            if (string.IsNullOrWhiteSpace(jsonResponse))
+                throw new Exception("Received an empty response from Binance API.");
+
+
+            if (jsonResponse.Contains("code") && jsonResponse.Contains("msg"))
+            {
+                var errorResponse = JsonConvert.DeserializeObject<BinanceErrorResponse>(jsonResponse);
+                throw new Exception($"Binance API error: {errorResponse.Msg} (Code: {errorResponse.Code})");
+            }
+
             List<FuturesAccountBalance> balances = JsonConvert.DeserializeObject<List<FuturesAccountBalance>>(jsonResponse);
 
             float currBalance = balances.Where(x => x.Asset == "USDT").FirstOrDefault()?.CrossWalletBalance ?? 0.0f;
@@ -56,23 +71,35 @@ namespace Services
                 UpdateTime = DateTime.UtcNow
             };
 
-            _cache.Set("Binance_Balance", result, _cacheDuration);
-
             return result;
         }
 
         public virtual async Task<List<FuturesAccountTradeResponseDto>> GetAccountTradesAsync()
         {
-            if (_cache.TryGetValue("Binance_Account_Trades", out List<FuturesAccountTradeResponseDto> cachedAccountTrades))
+            if (_cache.TryGetValue(CacheKeys.BinanceAccountTrades, out List<FuturesAccountTradeResponseDto> cachedAccountTrades))
                 return cachedAccountTrades;
 
             var response = await FetchAccountTradesFromBinance();
+
+            _cache.Set(CacheKeys.BinanceAccountTrades, response, _cacheDuration);
+
             return response;
         }
 
-        public async Task<List<FuturesAccountTradeResponseDto>> FetchAccountTradesFromBinance()
+        public virtual async Task<List<FuturesAccountTradeResponseDto>> FetchAccountTradesFromBinance()
         {
             var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesAccountTradesEndpoint);
+
+            if (string.IsNullOrWhiteSpace(jsonResponse))
+                throw new Exception("Received an empty response from Binance API.");
+
+
+            if (jsonResponse.Contains("code") && jsonResponse.Contains("msg"))
+            {
+                var errorResponse = JsonConvert.DeserializeObject<BinanceErrorResponse>(jsonResponse);
+                throw new Exception($"Binance API error: {errorResponse.Msg} (Code: {errorResponse.Code})");
+            }
+
             List<FuturesAccountTrade> accountTrades = JsonConvert.DeserializeObject<List<FuturesAccountTrade>>(jsonResponse);
 
 
@@ -93,25 +120,39 @@ namespace Services
                 Time = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(trade.Time)).UtcDateTime
             }).ToList();
 
-            _cache.Set("Binance_Account_Trades", result, _cacheDuration);
+            
 
             return result;
         }
 
-        public async Task<List<FuturesIncomeHistoryResponseDto>> GetIncomeHistoryAsync()
+        public virtual async Task<List<FuturesIncomeHistoryResponseDto>> GetIncomeHistoryAsync()
         {
-            if (_cache.TryGetValue("Binance_Income_History", out List<FuturesIncomeHistoryResponseDto> cachedIncomeHistory))
+            if (_cache.TryGetValue(CacheKeys.BinanceIncomeHistory, out List<FuturesIncomeHistoryResponseDto> cachedIncomeHistory))
                 return cachedIncomeHistory;
 
             var response = await FetchIncomeHistoryFromBinance();
+
+            _cache.Set(CacheKeys.BinanceIncomeHistory, response, _cacheDuration);
+
             return response;
         }
 
-        public async Task<List<FuturesIncomeHistoryResponseDto>> FetchIncomeHistoryFromBinance()
+        public virtual async Task<List<FuturesIncomeHistoryResponseDto>> FetchIncomeHistoryFromBinance()
         {
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
             queryParams["limit"] = "1000";
             var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesIncomeHistoryEndpoint, queryParams);
+
+            if (string.IsNullOrWhiteSpace(jsonResponse))
+                throw new Exception("Received an empty response from Binance API.");
+
+
+            if (jsonResponse.Contains("code") && jsonResponse.Contains("msg"))
+            {
+                var errorResponse = JsonConvert.DeserializeObject<BinanceErrorResponse>(jsonResponse);
+                throw new Exception($"Binance API error: {errorResponse.Msg} (Code: {errorResponse.Code})");
+            }
+
             List<FuturesIncomeHistory> cachedIncomeHistory = JsonConvert.DeserializeObject<List<FuturesIncomeHistory>>(jsonResponse);
 
 
@@ -128,29 +169,40 @@ namespace Services
             }).ToList();
 
 
-
-            _cache.Set("Binance_Income_History", result, _cacheDuration);
-
             return result;
         }
 
-        public async Task<List<FutureOpenPositionsResponseDto>> GetOpenPositionsAsync()
+        public virtual async Task<List<FutureOpenPositionsResponseDto>> GetOpenPositionsAsync()
         {
-            if (_cache.TryGetValue("Binance_Open_Positions", out List<FutureOpenPositionsResponseDto> cachedOpenPositions))
+            if (_cache.TryGetValue(CacheKeys.BinanceOpenPositions, out List<FutureOpenPositionsResponseDto> cachedOpenPositions))
                 return cachedOpenPositions;
 
             var response = await FetchOpenPositionsFromBinance();
+
+            _cache.Set(CacheKeys.BinanceOpenPositions, response, _cacheDuration);
+
             return response;
         }
 
-        public async Task<List<FutureOpenPositionsResponseDto>> FetchOpenPositionsFromBinance()
+        public virtual async Task<List<FutureOpenPositionsResponseDto>> FetchOpenPositionsFromBinance()
         {
             var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesOpenPositionsEndpoint);
-            List<FutureOpenPositions> cachedOpenPositions = JsonConvert.DeserializeObject<List<FutureOpenPositions>>(jsonResponse);
 
-            cachedOpenPositions = cachedOpenPositions.Where(position => Convert.ToSingle(position.PositionAmt) != 0).ToList();
+            if (string.IsNullOrWhiteSpace(jsonResponse))
+                throw new Exception("Received an empty response from Binance API.");
 
-            var result = cachedOpenPositions.Select(position => new FutureOpenPositionsResponseDto
+
+            if (jsonResponse.Contains("code") && jsonResponse.Contains("msg"))
+            {
+                var errorResponse = JsonConvert.DeserializeObject<BinanceErrorResponse>(jsonResponse);
+                throw new Exception($"Binance API error: {errorResponse.Msg} (Code: {errorResponse.Code})");
+            }
+
+            List<FutureOpenPositions> openPositionsList = JsonConvert.DeserializeObject<List<FutureOpenPositions>>(jsonResponse);
+
+            openPositionsList = openPositionsList.Where(position => Convert.ToSingle(position.PositionAmt) != 0).ToList();
+
+            var result = openPositionsList.Select(position => new FutureOpenPositionsResponseDto
             {
 
                 Symbol = position.Symbol,
@@ -161,23 +213,37 @@ namespace Services
                 Notional = Convert.ToSingle(position.Notional)
             }).ToList();
 
-            _cache.Set("Binance_Open_Positions", result, _cacheDuration);
+            
 
             return result;
         }
 
-        public async Task<List<FuturesOpenOrdersResponseDto>> GetOpenOrdersAsync()
+        public virtual async Task<List<FuturesOpenOrdersResponseDto>> GetOpenOrdersAsync()
         {
-            if (_cache.TryGetValue("Binance_Open_Orders", out List<FuturesOpenOrdersResponseDto> cachedOpenOrders))
+            if (_cache.TryGetValue(CacheKeys.BinanceOpenOrders, out List<FuturesOpenOrdersResponseDto> cachedOpenOrders))
                 return cachedOpenOrders;
 
             var response = await FetchOpenOrdersFromBinance();
+
+            _cache.Set(CacheKeys.BinanceOpenOrders, response, _cacheDuration);
+
             return response;
         }
 
-        public async Task<List<FuturesOpenOrdersResponseDto>> FetchOpenOrdersFromBinance()
+        public virtual async Task<List<FuturesOpenOrdersResponseDto>> FetchOpenOrdersFromBinance()
         {
             var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesOpenOrdersEndpoint);
+
+            if (string.IsNullOrWhiteSpace(jsonResponse))
+                throw new Exception("Received an empty response from Binance API.");
+
+
+            if (jsonResponse.Contains("code") && jsonResponse.Contains("msg"))
+            {
+                var errorResponse = JsonConvert.DeserializeObject<BinanceErrorResponse>(jsonResponse);
+                throw new Exception($"Binance API error: {errorResponse.Msg} (Code: {errorResponse.Code})");
+            }
+
             List<FuturesOpenOrders> cachedOpenOrders = JsonConvert.DeserializeObject<List<FuturesOpenOrders>>(jsonResponse);
 
             Console.WriteLine(cachedOpenOrders);
@@ -192,13 +258,13 @@ namespace Services
                 Time = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(order.UpdateTime)).UtcDateTime,
             }).ToList();
 
-            _cache.Set("Binance_Open_Orders", result, _cacheDuration);
+            
 
             return result;
         }
 
 
-        public async Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync()
+        public virtual async Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync()
         {
             List<FuturesAccountTradeResponseDto> accountTrades = await GetAccountTradesAsync();
             List<FuturesAccountTradeResponseDto> accountTradeDB = (await _tradeRepository.GetAllAccountTradesAsync()).ToList();
@@ -214,14 +280,14 @@ namespace Services
             return positions;
         }
 
-        public async Task<List<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync()
+        public virtual async Task<List<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync()
         {
             List<BalanceSnapshotResponseDto> balanceSnaphot = (await _tradeRepository.GetBalanceSnapshotAsync()).ToList();
             balanceSnaphot[balanceSnaphot.Count - 1].Balance = (await GetBalanceAsync()).Balance;
             return balanceSnaphot;
         }
 
-        public async Task<List<DailyPNLResponseDTO>> GetDailyPNLAsync()
+        public virtual async Task<List<DailyPNLResponseDTO>> GetDailyPNLAsync()
         {
             List<DailyPNLResponseDTO> dailyPNL = (await _tradeRepository.GetDailyPNLAsync()).ToList();
             List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
@@ -234,7 +300,7 @@ namespace Services
 
         }
 
-        public async Task<List<MonthlySummaryResponseDto>> GetMonthlySummaryAsync()
+        public virtual async Task<List<MonthlySummaryResponseDto>> GetMonthlySummaryAsync()
         {
             List<DailyPNLResponseDTO> dailyPNL = await GetDailyPNLAsync();
 
@@ -251,8 +317,7 @@ namespace Services
             return monthlySummaryList;
         }
 
-
-        public async Task<List<HistoryResponseDto>> GetHistoryAsync()
+        public virtual async Task<List<HistoryResponseDto>> GetHistoryAsync()
         {
             List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
             var cutoffDate = DateTime.UtcNow.AddDays(-BinanceServiceConstants.DAYS_TO_FETCH);
@@ -291,9 +356,9 @@ namespace Services
             return dailyData;
         }
 
-        public Task<DateTime> GetLastUpdatedTime()
+        public virtual Task<DateTime> GetLastUpdatedTime()
         {
-            if (_cache.TryGetValue("Last_Updated_Time", out DateTime cachedLastUpdatedTime))
+            if (_cache.TryGetValue(CacheKeys.LastUpdatedTime, out DateTime cachedLastUpdatedTime))
                 return Task.FromResult(cachedLastUpdatedTime);
 
             return Task.FromResult(DateTime.Now);
@@ -301,7 +366,7 @@ namespace Services
 
         #region private functions
 
-        private string GetOrderType(string side, string positionSide)
+        public virtual string GetOrderType(string side, string positionSide)
         {
             if (side == "BUY")
             {
@@ -321,7 +386,7 @@ namespace Services
 
 
 
-        private List<PositionHistoryResponseDto> ProcessTrades(List<FuturesAccountTradeResponseDto> trades)
+        public virtual List<PositionHistoryResponseDto> ProcessTrades(List<FuturesAccountTradeResponseDto> trades)
         {
             var masterResults = new List<PositionHistoryResponseDto>();
             var issueCoins = new List<string>();
@@ -383,7 +448,7 @@ namespace Services
             return masterResults.OrderBy(r => r.CloseTime).ToList();
         }
 
-        private List<PositionHistoryResponseDto> GetPositionsCoinLong(List<FuturesAccountTradeResponseDto> df)
+        public virtual List<PositionHistoryResponseDto> GetPositionsCoinLong(List<FuturesAccountTradeResponseDto> df)
         {
             var results = new List<PositionHistoryResponseDto>();
             if (!df.Any()) return results;
@@ -470,7 +535,7 @@ namespace Services
             return results;
         }
 
-        private List<PositionHistoryResponseDto> GetPositionsCoinShort(List<FuturesAccountTradeResponseDto> df)
+        public virtual List<PositionHistoryResponseDto> GetPositionsCoinShort(List<FuturesAccountTradeResponseDto> df)
         {
             var results = new List<PositionHistoryResponseDto>();
             if (!df.Any()) return results;
