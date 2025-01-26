@@ -20,5 +20,15 @@ namespace Interfaces.Services
         Task<List<FuturesOpenOrdersResponseDto>> GetOpenOrdersAsync();
 
         Task<List<PositionHistoryResponseDto>> GetPositionHistoryAsync();
+
+        Task<List<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync();
+
+        Task<List<DailyPNLResponseDTO>> GetDailyPNLAsync();
+
+        Task<List<MonthlySummaryResponseDto>> GetMonthlySummaryAsync();
+
+        Task<List<HistoryResponseDto>> GetHistoryAsync();
+
+        Task<DateTime> GetLastUpdatedTime();
     }
 }

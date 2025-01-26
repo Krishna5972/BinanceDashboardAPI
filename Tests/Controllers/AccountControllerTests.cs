@@ -28,7 +28,7 @@ namespace Tests.Controllers
             // Arrange
             var fakeBalance = new FuturesAccountBalanceResponseDto
             {
-                Balance = 1000.00m,
+                Balance = 1000.00f,
                 UpdateTime = DateTime.UtcNow
             };
 
@@ -107,8 +107,8 @@ namespace Tests.Controllers
             // Arrange
             _mockBinanceService.Setup(s => s.GetBalanceAsync()).Returns(async () =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(6)); // Simulate delay
-                return new FuturesAccountBalanceResponseDto { Balance = 1000.00m, UpdateTime = DateTime.UtcNow };
+                await Task.Delay(TimeSpan.FromSeconds(12)); // Simulate delay
+                return new FuturesAccountBalanceResponseDto { Balance = 1000.00f, UpdateTime = DateTime.UtcNow };
             });
 
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -131,7 +131,7 @@ namespace Tests.Controllers
             // Arrange
             var fakeBalance = new FuturesAccountBalanceResponseDto
             {
-                Balance = 5000.50m,
+                Balance = 5000.50f,
                 UpdateTime = DateTime.UtcNow
             };
 

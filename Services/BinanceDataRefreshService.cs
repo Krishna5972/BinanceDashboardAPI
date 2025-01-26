@@ -6,12 +6,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Client;
 
 public class BinanceDataRefreshService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMemoryCache _cache;
     private readonly TimeSpan _refreshInterval;
+    private readonly TimeSpan _cacheDuration;
 
     public BinanceDataRefreshService(IServiceScopeFactory serviceScopeFactory, IMemoryCache cache, IConfiguration configuration)
     {
@@ -21,6 +23,10 @@ public class BinanceDataRefreshService : BackgroundService
         // Read interval from configuration (default to 5 minutes)
         int intervalMinutes = configuration.GetValue<int>("BackgroundTaskSettings:BackgroundTaskIntervalMinutes", 5);
         _refreshInterval = TimeSpan.FromMinutes(intervalMinutes);
+
+
+        int cacheMinutes = configuration.GetValue<int>("CacheSettings:CacheDurationMinutes", 5);
+        _cacheDuration = TimeSpan.FromMinutes(cacheMinutes);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -31,11 +37,18 @@ public class BinanceDataRefreshService : BackgroundService
             {
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    var binanceService = scope.ServiceProvider.GetRequiredService<IBinanceService>();
+                    var _binanceService = scope.ServiceProvider.GetRequiredService<IBinanceService>();
 
-                    Console.WriteLine("Hitting  Binance API's...");
+                    Console.WriteLine($"Hitting  Binance API's... {DateTime.Now}");
 
-                    var balance = await binanceService.GetBalanceAsync();
+                    var balance = await _binanceService.GetBalanceAsync();
+                    var incomeHistory = await _binanceService.GetIncomeHistoryAsync();
+                    var openPositions = await _binanceService.GetOpenPositionsAsync();
+                    var openOrders = await _binanceService.GetOpenOrdersAsync();
+                    var accountTrades = await _binanceService.GetAccountTradesAsync();
+
+                    _cache.Set("Last_Updated_Time", DateTime.Now, _cacheDuration);
+
 
                 }
             }

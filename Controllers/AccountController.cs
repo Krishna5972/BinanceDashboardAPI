@@ -329,5 +329,260 @@ namespace BinanceDashboardAPI.Controllers
                 return result;
             }
         }
+
+
+        [HttpGet("GetBalanceSnapshot")]
+        public async Task<IActionResult> GetBalanceSnapshot()
+        {
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+                var response = await _binanceService.GetBalanceSnapshotAsync().WaitAsync(cts.Token);
+
+                if (response is null)
+                {
+                    return NotFound(new ErrorResponse
+                    {
+                        Message = "Balance Snapshot not found.",
+                        Error = "Balance Snapshot  information could not be retrieved."
+                    });
+                }
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "Invalid request.",
+                    Error = ex.Message
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "The request timed out.",
+                    Error = "The service took too long to respond."
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 504;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "An error occurred while retrieving Balance Snapshot.",
+                    Error = ex.Message
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 500;
+                return result;
+            }
+        }
+
+
+        [HttpGet("GetDailyPNL")]
+        public async Task<IActionResult> GetDailyPNL()
+        {
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+                var response = await _binanceService.GetDailyPNLAsync().WaitAsync(cts.Token);
+
+                if (response is null)
+                {
+                    return NotFound(new ErrorResponse
+                    {
+                        Message = "Daily PNL not found.",
+                        Error = "Daily PNL  information could not be retrieved."
+                    });
+                }
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "Invalid request.",
+                    Error = ex.Message
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "The request timed out.",
+                    Error = "The service took too long to respond."
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 504;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "An error occurred while retrieving Daily PNL.",
+                    Error = ex.Message
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 500;
+                return result;
+            }
+        }
+
+
+        [HttpGet("GetMonthlySummary")]
+        public async Task<IActionResult> GetMonthlySummary()
+        {
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+                var response = await _binanceService.GetMonthlySummaryAsync().WaitAsync(cts.Token);
+
+                if (response is null)
+                {
+                    return NotFound(new ErrorResponse
+                    {
+                        Message = "Monthly Summary not found.",
+                        Error = "Monthly Summary  information could not be retrieved."
+                    });
+                }
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "Invalid request.",
+                    Error = ex.Message
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "The request timed out.",
+                    Error = "The service took too long to respond."
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 504;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "An error occurred while retrieving Monthly Summary.",
+                    Error = ex.Message
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 500;
+                return result;
+            }
+        }
+
+        [HttpGet("GetHistory")]
+        public async Task<IActionResult> GetHistory()
+        {
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+                var response = await _binanceService.GetHistoryAsync().WaitAsync(cts.Token);
+
+                if (response is null)
+                {
+                    return NotFound(new ErrorResponse
+                    {
+                        Message = "History Summary not found.",
+                        Error = "History Summary  information could not be retrieved."
+                    });
+                }
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "Invalid request.",
+                    Error = ex.Message
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "The request timed out.",
+                    Error = "The service took too long to respond."
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 504;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "An error occurred while retrieving History.",
+                    Error = ex.Message
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 500;
+                return result;
+            }
+        }
+
+
+        [HttpGet("GetLastUpdatedTime")]
+        public async Task<IActionResult> GetLastUpdatedTime()
+        {
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+                var dateTime = await _binanceService.GetLastUpdatedTime().WaitAsync(cts.Token);
+
+                return Ok(new {LastUpdatedTime = dateTime });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "Invalid request.",
+                    Error = ex.Message
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "The request timed out.",
+                    Error = "The service took too long to respond."
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 504;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "An error occurred while retrieving Last Updated Time.",
+                    Error = ex.Message
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 500;
+                return result;
+            }
+        }
     }
 }

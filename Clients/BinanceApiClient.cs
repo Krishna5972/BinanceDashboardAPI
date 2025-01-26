@@ -30,6 +30,7 @@ namespace Clients
 
         public async Task<string> GetAsync(string endpoint, Dictionary<string, string> queryParams = null)
         {
+
             queryParams ??= new Dictionary<string, string>();
             queryParams["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
 
@@ -43,7 +44,7 @@ namespace Clients
             client.DefaultRequestHeaders.Add("X-MBX-APIKEY", _apiKey);
 
 
-            _logger.LogInformation($"Making GET request to Binance: {client.BaseAddress.ToString()}{requestUrl}");
+            _logger.LogInformation($"Making GET request to Binance: {client.BaseAddress.ToString()}{requestUrl} at {DateTime.Now}");
 
             var response = await client.GetAsync(requestUrl);
             response.EnsureSuccessStatusCode();
@@ -95,7 +96,6 @@ namespace Clients
                 value = configuration[key];
             }
 
-            _logger.LogInformation($"Config key '{key}' loaded: {(!string.IsNullOrEmpty(value) ? "Yes" : "No")}");
             return value;
         }
     }
