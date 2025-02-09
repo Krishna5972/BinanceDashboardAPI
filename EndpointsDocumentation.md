@@ -123,7 +123,7 @@ The `GetIncomeHistory` endpoint provides a detailed record of income-related tra
 | Property     | Type       | Description                                         |
 | ------------ | ---------- | --------------------------------------------------- |
 | `symbol`     | `string`   | The trading pair symbol (e.g., BTCUSDT).            |
-| `incomeType` | `string`   | The type of income (e.g., COMMISSION, FUNDING_FEE). |
+| `incomeType` | `string`   | The type of income (e.g., COMMISSION, FUNDING_FEE,REALIZED_PNL). |
 | `income`     | `float`    | The amount of income received.                      |
 | `asset`      | `string`   | The asset in which the income was received.         |
 | `info`       | `string`   | Additional details about the income source.         |
@@ -137,10 +137,10 @@ The `GetIncomeHistory` endpoint provides a detailed record of income-related tra
 [
   {
     "symbol": "BTCUSDT",
-    "incomeType": "FUNDING_FEE",
+    "incomeType": "REALIZED_PNL",
     "income": 12.5,
     "asset": "USDT",
-    "info": "Funding fee income",
+    "info": "13579604",
     "time": "2025-01-25T18:45:00Z",
     "tranId": 987654321,
     "tradeId": 123456789
