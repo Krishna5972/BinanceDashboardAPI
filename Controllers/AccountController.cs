@@ -1,5 +1,7 @@
-﻿using Interfaces.Services;
+﻿using Common.Settings;
+using Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Models.DTOs;
 
 namespace BinanceDashboardAPI.Controllers
@@ -9,18 +11,18 @@ namespace BinanceDashboardAPI.Controllers
     public class AccountController : ControllerBase
     {   
         private readonly IBinanceService _binanceService;
-        public AccountController(IBinanceService binanceService) {
+        private readonly ApiSettings _apiSettings;
+        public AccountController(IBinanceService binanceService, IOptions<ApiSettings> apiSettings) {
             _binanceService = binanceService;
+            _apiSettings = apiSettings.Value;
         }
-
-
 
         [HttpGet("GetBalance")]
         public async Task<IActionResult> GetBalance()
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetBalanceAsync().WaitAsync(cts.Token);
 
@@ -72,7 +74,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetAccountTradesAsync().WaitAsync(cts.Token);
 
@@ -125,7 +127,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetIncomeHistoryAsync().WaitAsync(cts.Token);
 
@@ -178,7 +180,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetOpenPositionsAsync().WaitAsync(cts.Token);
 
@@ -230,7 +232,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetOpenOrdersAsync().WaitAsync(cts.Token);
 
@@ -283,7 +285,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetPositionHistoryAsync().WaitAsync(cts.Token);
 
@@ -336,7 +338,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetBalanceSnapshotAsync().WaitAsync(cts.Token);
 
@@ -389,7 +391,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetDailyPNLAsync().WaitAsync(cts.Token);
 
@@ -442,7 +444,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetMonthlySummaryAsync().WaitAsync(cts.Token);
 
@@ -494,7 +496,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var response = await _binanceService.GetHistoryAsync().WaitAsync(cts.Token);
 
@@ -547,7 +549,7 @@ namespace BinanceDashboardAPI.Controllers
         {
             try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
 
                 var dateTime = await _binanceService.GetLastUpdatedTime().WaitAsync(cts.Token);
 

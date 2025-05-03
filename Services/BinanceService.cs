@@ -292,7 +292,9 @@ namespace Services
             List<DailyPNLResponseDTO> dailyPNL = (await _tradeRepository.GetDailyPNLAsync()).ToList();
             List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
 
-            float todayIncome = incomeHistory.Where(x => x.Time.Day == DateTime.Now.Day).ToList().Sum(t => t.Income);
+            float todayIncome = incomeHistory
+                                .Where(x => x.IncomeType != "TRANSFER" && x.Time.Day == DateTime.Now.Day)
+                                .Sum(t => t.Income);
 
             dailyPNL[dailyPNL.Count - 1].PNL = todayIncome;
 
