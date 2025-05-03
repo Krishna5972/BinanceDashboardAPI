@@ -5,6 +5,8 @@ using Services;
 using Interfaces.Repository;
 using DatabaseLayer;
 using Repository.Context;
+using Common.Settings;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,7 @@ builder.Services.AddHttpClient("BinanceClient", client =>
 });
 
 builder.Services.AddMemoryCache();
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 bool useMock = builder.Configuration.GetValue<bool>("UseMock");
 
