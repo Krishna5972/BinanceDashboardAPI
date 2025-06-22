@@ -164,7 +164,7 @@ namespace Services
                 Asset = trade.Asset,
                 Info = trade.Info,
                 Time = string.IsNullOrWhiteSpace(trade.Time) ? DateTime.MinValue : DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(trade.Time)).UtcDateTime,
-                TranId = string.IsNullOrWhiteSpace(trade.TranId) ? 0 : Convert.ToInt64(trade.TranId),
+                TranID = string.IsNullOrWhiteSpace(trade.TranId) ? 0 : Convert.ToInt64(trade.TranId),
                 TradeID = string.IsNullOrWhiteSpace(trade.TradeID) ? 0 : Convert.ToInt64(trade.TradeID)
             }).ToList();
 
@@ -322,15 +322,24 @@ namespace Services
         public virtual async Task<List<HistoryResponseDto>> GetHistoryAsync()
         {
             List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
+
+            List<FuturesIncomeHistoryResponseDto> incomeHistoryDB = (await _tradeRepository.GetAllIncomeHistoryAsync()).ToList();
+
+            List<FuturesIncomeHistoryResponseDto> combinedIncomeHistory = incomeHistory
+                                                                    .Concat(incomeHistoryDB)
+                                                                    .Distinct(new FuturesIncomeHistoryComparer())
+                                                                    .ToList();
+
             var cutoffDate = DateTime.UtcNow.AddDays(-BinanceServiceConstants.DAYS_TO_FETCH);
 
-            var lastSixDays = incomeHistory
+            var lastSixDays = combinedIncomeHistory
                 .Where(i => i.Time >= cutoffDate)
                 .ToList();
 
             var dailyData = lastSixDays
                 .GroupBy(i => new { i.Time.Year, i.Time.Month, i.Time.Day })
-                .Select(g => {
+                .Select(g =>
+                {
                     var commissionsForDay = g.Where(i =>
                         i.IncomeType == BinanceServiceConstants.FUNDING_FEE || i.IncomeType == BinanceServiceConstants.COMMISSION)
                         .Sum(x => x.Income);
@@ -352,12 +361,11 @@ namespace Services
                             multipler = totalIncome * BinanceServiceConstants.INCOME_MULTIPLIER
                         }
                     };
-                })
-                .ToList();
+                });
 
-            return dailyData;
+
+            return dailyData.OrderBy(d => d.Date).ToList();
         }
-
         public virtual Task<DateTime> GetLastUpdatedTime()
         {
             if (_cache.TryGetValue(CacheKeys.LastUpdatedTime, out DateTime cachedLastUpdatedTime))

@@ -35,7 +35,12 @@ namespace DatabaseLayer
 
             using (var connection = _dbContext.GetConnection())
             {
-                string query = "SELECT * FROM [dbo].[TradeDetails]";
+                string query = @"SELECT * FROM (
+                                               SELECT TOP 10000 * 
+                                               FROM [dbo].[TradeDetails]
+                                               ORDER BY TradeDetailsID DESC
+                                            ) AS LatestRecords
+                                            ORDER BY Time ASC;";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -113,7 +118,56 @@ namespace DatabaseLayer
             return balanceSnapshot;
         }
 
+        public async Task<IEnumerable<FuturesIncomeHistoryResponseDto>> GetAllIncomeHistoryAsync()
+        {
+            const string cacheKey = "AllIncomeHistoryDB";
 
+            // Try to get data from the cache
+            if (_cache.TryGetValue(cacheKey, out IEnumerable<FuturesIncomeHistoryResponseDto> cachedTrades))
+            {
+                return cachedTrades;
+            }
+
+            var accountTrades = new List<FuturesIncomeHistoryResponseDto>();
+
+            using (var connection = _dbContext.GetConnection())
+            {
+                string query = @"SELECT * FROM (
+                                                SELECT TOP 10000 * 
+                                                FROM [dbo].[TradingData]
+                                                ORDER BY TradingDataID DESC
+                                            ) AS LatestRecords
+                                            ORDER BY Time ASC;";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var trade = new FuturesIncomeHistoryResponseDto
+                            {
+                                Symbol = reader["Symbol"]?.ToString(),
+                                IncomeType = reader["IncomeType"]?.ToString(),
+                                Income = reader["Income"] != DBNull.Value ? Convert.ToSingle(reader["Income"]) : 0f,
+                                Asset = reader["Asset"]?.ToString(),
+                                Info = reader["Info"]?.ToString(),
+                                TranID = reader["TranID"] != DBNull.Value ? Convert.ToInt64(reader["TranID"]) : 0,
+                                TradeID = reader["TradeID"] != DBNull.Value ? Convert.ToInt64(reader["TradeID"]) : 0,
+                                Time = reader["Time"] != DBNull.Value
+                                    ? ((DateTimeOffset)reader["Time"]).UtcDateTime
+                                    : DateTime.MinValue
+                            };
+
+                            accountTrades.Add(trade);
+                        }
+                    }
+                }
+            }
+
+            _cache.Set(cacheKey, accountTrades, _cacheDuration);
+
+            return accountTrades;
+        }
         public async Task<IEnumerable<DailyPNLResponseDTO>> GetDailyPNLAsync()
         {
             const string cacheKey = "DailyPNLDB";

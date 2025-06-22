@@ -15,7 +15,7 @@ namespace Models.DTOs
         public string Asset { get; set; }
         public string Info { get; set; }
         public DateTime Time { get; set; }
-        public long TranId { get; set; }
+        public long TranID { get; set; }
         public long TradeID { get; set; }
     }
 }
