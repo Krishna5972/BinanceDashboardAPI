@@ -14,5 +14,6 @@ namespace Common.Constants
         public const string BinanceOpenPositions = "Binance_Open_Positions";
         public const string BinanceOpenOrders = "Binance_Open_Orders";
         public const string LastUpdatedTime = "Last_Updated_Time";
+        public const string BNBCurrentPrice = "BNB_Current_Price";
     }
 }

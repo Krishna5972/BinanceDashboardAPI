@@ -13,5 +13,6 @@ namespace Common.Constants
         public const string FuturesIncomeHistoryEndpoint = "/fapi/v1/income";
         public const string FuturesOpenPositionsEndpoint = "/fapi/v3/positionRisk"; 
         public const string FuturesOpenOrdersEndpoint = "/fapi/v1/openOrders";
+        public const string FuturesTickerPrice = "fapi/v1/ticker/price";
     }
 }

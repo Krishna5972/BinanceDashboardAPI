@@ -144,12 +144,16 @@ namespace DatabaseLayer
                     {
                         while (await reader.ReadAsync())
                         {
+                            string asset = reader["Asset"]?.ToString();
+
                             var trade = new FuturesIncomeHistoryResponseDto
                             {
                                 Symbol = reader["Symbol"]?.ToString(),
                                 IncomeType = reader["IncomeType"]?.ToString(),
-                                Income = reader["Income"] != DBNull.Value ? Convert.ToSingle(reader["Income"]) : 0f,
-                                Asset = reader["Asset"]?.ToString(),
+                                Income = asset == "BNB"
+                                                    ? (reader["IncomeUSDT"] != DBNull.Value ? Convert.ToSingle(reader["IncomeUSDT"]) : 0f)
+                                                    : (reader["Income"] != DBNull.Value ? Convert.ToSingle(reader["Income"]) : 0f),
+                                Asset = asset,
                                 Info = reader["Info"]?.ToString(),
                                 TranID = reader["TranID"] != DBNull.Value ? Convert.ToInt64(reader["TranID"]) : 0,
                                 TradeID = reader["TradeID"] != DBNull.Value ? Convert.ToInt64(reader["TradeID"]) : 0,
