@@ -6,18 +6,25 @@ using Models.DTOs;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Common.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Tests.Controllers
 {
     public class AccountControllerTests
     {
         private readonly Mock<IBinanceService> _mockBinanceService;
+        private readonly Mock<IOptions<ApiSettings>> _mockApiSettings;
         private readonly AccountController _controller;
 
         public AccountControllerTests()
         {
             _mockBinanceService = new Mock<IBinanceService>();
-            _controller = new AccountController(_mockBinanceService.Object);
+            _mockApiSettings = new Mock<IOptions<ApiSettings>>();
+
+            _mockApiSettings.Setup(x => x.Value).Returns(new ApiSettings());
+
+            _controller = new AccountController(_mockBinanceService.Object, _mockApiSettings.Object);
         }
 
         #region GetBalance

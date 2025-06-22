@@ -16,6 +16,9 @@ using Common.Comparers;
 using System.Text.Json;
 using System.IO;
 using Common.Constants;
+using Azure;
+using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Services
 {
@@ -164,7 +167,7 @@ namespace Services
                 Asset = trade.Asset,
                 Info = trade.Info,
                 Time = string.IsNullOrWhiteSpace(trade.Time) ? DateTime.MinValue : DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(trade.Time)).UtcDateTime,
-                TranId = string.IsNullOrWhiteSpace(trade.TranId) ? 0 : Convert.ToInt64(trade.TranId),
+                TranID = string.IsNullOrWhiteSpace(trade.TranId) ? 0 : Convert.ToInt64(trade.TranId),
                 TradeID = string.IsNullOrWhiteSpace(trade.TradeID) ? 0 : Convert.ToInt64(trade.TradeID)
             }).ToList();
 
@@ -321,16 +324,53 @@ namespace Services
 
         public virtual async Task<List<HistoryResponseDto>> GetHistoryAsync()
         {
-            List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
+            List<FuturesIncomeHistoryResponseDto> incomeHistory;
+            List<FuturesIncomeHistoryResponseDto> cachedIncomeHistory = await GetIncomeHistoryAsync();
+            var currentDate = DateTime.UtcNow.Date;
+            var currentDayBnbItems = cachedIncomeHistory.Where(x => x.Asset == "BNB" && x.Time.Date == currentDate).ToList();
+
+            if (currentDayBnbItems.Any())
+            {
+                incomeHistory = cachedIncomeHistory.Select(x => new FuturesIncomeHistoryResponseDto
+                {
+                    Symbol = x.Symbol,
+                    IncomeType = x.IncomeType,
+                    Income = x.Income,
+                    Asset = x.Asset,
+                    Info = x.Info,
+                    TranID = x.TranID,
+                    TradeID = x.TradeID,
+                    Time = x.Time
+                }).ToList();
+
+                float currentBnbPrice = await GetCurrentBNBPrice();
+
+                // Modify the CLONED objects, not the cached ones
+                foreach (var item in incomeHistory.Where(x => x.Asset == "BNB" && x.Time.Date == currentDate))
+                {
+                    item.Income = item.Income * currentBnbPrice;
+                }
+            }
+            else
+            {
+                incomeHistory = cachedIncomeHistory;
+            }
+            List<FuturesIncomeHistoryResponseDto> incomeHistoryDB = (await _tradeRepository.GetAllIncomeHistoryAsync()).ToList();
+            List<FuturesIncomeHistoryResponseDto> combinedIncomeHistory = incomeHistory
+            .Concat(incomeHistoryDB)
+                                                                    .Distinct(new FuturesIncomeHistoryComparer())
+                                                                    .ToList();
+
             var cutoffDate = DateTime.UtcNow.AddDays(-BinanceServiceConstants.DAYS_TO_FETCH);
 
-            var lastSixDays = incomeHistory
+            var lastSixDays = combinedIncomeHistory
                 .Where(i => i.Time >= cutoffDate)
                 .ToList();
 
             var dailyData = lastSixDays
                 .GroupBy(i => new { i.Time.Year, i.Time.Month, i.Time.Day })
-                .Select(g => {
+                .Select(g =>
+                {
                     var commissionsForDay = g.Where(i =>
                         i.IncomeType == BinanceServiceConstants.FUNDING_FEE || i.IncomeType == BinanceServiceConstants.COMMISSION)
                         .Sum(x => x.Income);
@@ -352,12 +392,11 @@ namespace Services
                             multipler = totalIncome * BinanceServiceConstants.INCOME_MULTIPLIER
                         }
                     };
-                })
-                .ToList();
+                });
 
-            return dailyData;
+
+            return dailyData.OrderBy(d => d.Date).ToList();
         }
-
         public virtual Task<DateTime> GetLastUpdatedTime()
         {
             if (_cache.TryGetValue(CacheKeys.LastUpdatedTime, out DateTime cachedLastUpdatedTime))
@@ -368,6 +407,44 @@ namespace Services
 
         #region private functions
 
+
+        private async Task<float> GetCurrentBNBPrice()
+        {
+
+            if (_cache.TryGetValue(CacheKeys.BNBCurrentPrice, out float cachedPrice))
+                return cachedPrice;
+
+            try
+            {
+                
+                var queryParams = new Dictionary<string, string>
+                {
+                    ["symbol"] = "BNBUSDT"
+                };
+
+                var jsonResponse = await _binanceApiClient.GetAsync(BinanceEndpoints.FuturesTickerPrice, queryParams);
+
+                if (string.IsNullOrWhiteSpace(jsonResponse))
+                    throw new Exception("Received an empty response from Binance price API.");
+
+                if (jsonResponse.Contains("code") && jsonResponse.Contains("msg"))
+                {
+                    var errorResponse = JsonConvert.DeserializeObject<BinanceErrorResponse>(jsonResponse);
+                    throw new Exception($"Binance API error: {errorResponse.Msg} (Code: {errorResponse.Code})");
+                }
+
+                var priceData = JsonConvert.DeserializeObject<BinancePriceResponse>(jsonResponse);
+                float currentPrice = Convert.ToSingle(priceData.Price);
+
+                _cache.Set(CacheKeys.BNBCurrentPrice, currentPrice, TimeSpan.FromMinutes(5));
+
+                return currentPrice;
+            }
+            catch (Exception ex)
+            {
+                return 600f; // Fallback prices
+            }
+        }
         public virtual string GetOrderType(string side, string positionSide)
         {
             if (side == "BUY")

@@ -13,6 +13,8 @@ namespace Interfaces.Repository
 
         Task<IEnumerable<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync();
 
+        Task<IEnumerable<FuturesIncomeHistoryResponseDto>> GetAllIncomeHistoryAsync();
+
         Task<IEnumerable<DailyPNLResponseDTO>> GetDailyPNLAsync();
     }
 }

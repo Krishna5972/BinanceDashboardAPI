@@ -85,7 +85,7 @@ namespace Services
                     Asset = "USDT", // Assuming the asset is USDT
                     Info = random.Next(1000000, 9999999).ToString(), // Random trade-related info
                     Time = DateTime.UtcNow.AddMinutes(-random.Next(0, 60)), // Recent time within the last 60 minutes
-                    TranId = random.NextInt64(100000000, 999999999),
+                    TranID = random.NextInt64(100000000, 999999999),
                     TradeID = random.NextInt64(100000000, 999999999)
                 };
 
