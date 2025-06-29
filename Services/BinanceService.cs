@@ -256,7 +256,7 @@ namespace Services
                 Symbol = order.Symbol,
                 Price = Convert.ToSingle(order.Price) == 0 ? Convert.ToSingle(order.StopPrice) : Convert.ToSingle(order.Price),
                 EntryType = GetOrderType(order.Side, order.PositionSide),
-                OrderType = order.Type,
+                OrderType = order.OrigType == "STOP" ? "STOP" : order.Type,
                 Amount = Convert.ToSingle(order.OrigQty) * Convert.ToSingle(order.Price),
                 Time = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(order.UpdateTime)).UtcDateTime,
             }).ToList();
