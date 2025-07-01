@@ -438,6 +438,54 @@ namespace BinanceDashboardAPI.Controllers
             }
         }
 
+        [HttpGet("GetWeeklyPNL")]
+        public async Task<IActionResult> GetWeeklyPNL()
+        {
+            try
+            {
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_apiSettings.TimeoutSeconds));
+                var response = await _binanceService.GetWeeklyPNLAsync().WaitAsync(cts.Token);
+                if (response is null)
+                {
+                    return NotFound(new ErrorResponse
+                    {
+                        Message = "Weekly PNL not found.",
+                        Error = "Weekly PNL information could not be retrieved."
+                    });
+                }
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "Invalid request.",
+                    Error = ex.Message
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "The request timed out.",
+                    Error = "The service took too long to respond."
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 504;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse errorResponse = new ErrorResponse()
+                {
+                    Message = "An error occurred while retrieving Weekly PNL.",
+                    Error = ex.Message
+                };
+                var result = new ObjectResult(errorResponse);
+                result.StatusCode = 500;
+                return result;
+            }
+        }
 
         [HttpGet("GetMonthlySummary")]
         public async Task<IActionResult> GetMonthlySummary()

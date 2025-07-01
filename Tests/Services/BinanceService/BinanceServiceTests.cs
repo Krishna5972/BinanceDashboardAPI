@@ -1524,6 +1524,132 @@ namespace Tests.Services.BinanceServiceTests
         }
 
         [Fact]
+        public async Task GetWeeklyPNLAsync_WhenGetDailyPNLThrowsException_ShouldPropagateException()
+        {
+            // Arrange
+            _binanceServicePartialMock
+                .Setup(x => x.GetDailyPNLAsync())
+                .ThrowsAsync(new Exception("Daily PNL API Error"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(() => _binanceService.GetWeeklyPNLAsync());
+            _binanceServicePartialMock.Verify(x => x.GetDailyPNLAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetWeeklyPNLAsync_WhenGetDailyPNLReturnsNull_ShouldReturnNull()
+        {
+            // Arrange
+            _binanceServicePartialMock
+                .Setup(x => x.GetDailyPNLAsync())
+                .ReturnsAsync((List<DailyPNLResponseDTO>?)null);
+
+            // Act
+            var result = await _binanceService.GetWeeklyPNLAsync();
+
+            // Assert
+            Assert.Null(result);
+            _binanceServicePartialMock.Verify(x => x.GetDailyPNLAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetWeeklyPNLAsync_WhenGetDailyPNLReturnsEmptyList_ShouldReturnEmptyList()
+        {
+            // Arrange
+            _binanceServicePartialMock
+                .Setup(x => x.GetDailyPNLAsync())
+                .ReturnsAsync(new List<DailyPNLResponseDTO>());
+
+            // Act
+            var result = await _binanceService.GetWeeklyPNLAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Empty(result); // Expect empty list instead of null
+            _binanceServicePartialMock.Verify(x => x.GetDailyPNLAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetWeeklyPNLAsync_WhenGetDailyPNLReturnsValidData_ShouldReturnAggregatedWeeklyData()
+        {
+            // Arrange
+            var dailyData = new List<DailyPNLResponseDTO>
+    {
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 1, 1), PNL = 100.0f, LastUpdated = DateTime.UtcNow.AddHours(-1) }, // Monday
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 1, 2), PNL = 200.0f, LastUpdated = DateTime.UtcNow.AddHours(-2) }, // Tuesday
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 1, 3), PNL = -50.0f, LastUpdated = DateTime.UtcNow }, // Wednesday
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 1, 8), PNL = 300.0f, LastUpdated = DateTime.UtcNow.AddMinutes(-30) } // Next Monday (new week)
+    };
+
+            _binanceServicePartialMock
+                .Setup(x => x.GetDailyPNLAsync())
+                .ReturnsAsync(dailyData);
+
+            // Act
+            var result = await _binanceService.GetWeeklyPNLAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count); // Should have 2 weeks
+
+            // First week (Jan 1-3)
+            var firstWeek = result.First();
+            Assert.Equal(new DateOnly(2024, 1, 1), firstWeek.WeekStartDate);
+            Assert.Equal(new DateOnly(2024, 1, 3), firstWeek.WeekEndDate);
+            Assert.Equal(250.0f, firstWeek.WeeklyPNL); // 100 + 200 + (-50)
+            Assert.Equal(3, firstWeek.ActualDays);
+
+            // Second week (Jan 8)
+            var secondWeek = result.Last();
+            Assert.Equal(new DateOnly(2024, 1, 8), secondWeek.WeekStartDate);
+            Assert.Equal(new DateOnly(2024, 1, 8), secondWeek.WeekEndDate);
+            Assert.Equal(300.0f, secondWeek.WeeklyPNL);
+            Assert.Equal(1, secondWeek.ActualDays);
+
+            _binanceServicePartialMock.Verify(x => x.GetDailyPNLAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetWeeklyPNLAsync_WhenDataSpansMonths_ShouldBreakAtMonthBoundary()
+        {
+            // Arrange
+            var dailyData = new List<DailyPNLResponseDTO>
+    {
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 1, 30), PNL = 100.0f, LastUpdated = DateTime.UtcNow }, // Tuesday
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 1, 31), PNL = 150.0f, LastUpdated = DateTime.UtcNow }, // Wednesday
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 2, 1), PNL = 200.0f, LastUpdated = DateTime.UtcNow },  // Thursday (new month)
+        new DailyPNLResponseDTO { Date = new DateOnly(2024, 2, 2), PNL = 75.0f, LastUpdated = DateTime.UtcNow }    // Friday
+    };
+
+            _binanceServicePartialMock
+                .Setup(x => x.GetDailyPNLAsync())
+                .ReturnsAsync(dailyData);
+
+            // Act
+            var result = await _binanceService.GetWeeklyPNLAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count); // Should break into 2 groups at month boundary
+
+            // January group (Jan 30-31)
+            var januaryWeek = result.First();
+            Assert.Equal(new DateOnly(2024, 1, 30), januaryWeek.WeekStartDate);
+            Assert.Equal(new DateOnly(2024, 1, 31), januaryWeek.WeekEndDate);
+            Assert.Equal(250.0f, januaryWeek.WeeklyPNL); // 100 + 150
+            Assert.Equal(2, januaryWeek.ActualDays);
+
+            // February group (Feb 1-2)
+            var februaryWeek = result.Last();
+            Assert.Equal(new DateOnly(2024, 2, 1), februaryWeek.WeekStartDate);
+            Assert.Equal(new DateOnly(2024, 2, 2), februaryWeek.WeekEndDate);
+            Assert.Equal(275.0f, februaryWeek.WeeklyPNL); // 200 + 75
+            Assert.Equal(2, februaryWeek.ActualDays);
+
+            _binanceServicePartialMock.Verify(x => x.GetDailyPNLAsync(), Times.Once);
+        }
+
+        [Fact]
         public async Task GetDailyPNLAsync_WhenDailyPNLListHasSingleEntry_ShouldUpdateCorrectly()
         {
             // Arrange

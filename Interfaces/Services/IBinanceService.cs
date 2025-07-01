@@ -25,6 +25,8 @@ namespace Interfaces.Services
 
         Task<List<DailyPNLResponseDTO>> GetDailyPNLAsync();
 
+        Task<List<WeeklyPNLResponseDTO>> GetWeeklyPNLAsync();
+
         Task<List<MonthlySummaryResponseDto>> GetMonthlySummaryAsync();
 
         Task<List<HistoryResponseDto>> GetHistoryAsync();
