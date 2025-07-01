@@ -280,7 +280,7 @@ namespace Services
 
             List<PositionHistoryResponseDto> positions = ProcessTrades(combinedTrades);
 
-            return positions;
+            return positions.TakeLast(330).ToList();
         }
 
         public virtual async Task<List<BalanceSnapshotResponseDto>> GetBalanceSnapshotAsync()
@@ -321,6 +321,26 @@ namespace Services
                                         .ToList();
             return monthlySummaryList;
         }
+
+        public async Task<List<WeeklyPNLResponseDTO>?> GetWeeklyPNLAsync()
+        {
+            var dailyData = await GetDailyPNLAsync();
+            if (dailyData is null) return null;
+
+            return dailyData
+                .GroupBy(d => GetWeekWithinMonthKey(d.Date))
+                .Select(week => new WeeklyPNLResponseDTO
+                {
+                    WeekStartDate = week.Min(d => d.Date),
+                    WeekEndDate = week.Max(d => d.Date),
+                    WeeklyPNL = week.Sum(d => d.PNL),
+                    ActualDays = week.Count(),
+                    LastUpdated = week.Max(d => d.LastUpdated)
+                })
+                .OrderBy(w => w.WeekStartDate)
+                .ToList();
+        }
+
 
         public virtual async Task<List<HistoryResponseDto>> GetHistoryAsync()
         {
@@ -700,7 +720,14 @@ namespace Services
             return results;
         }
 
-        
+        private string GetWeekWithinMonthKey(DateOnly date)
+        {
+            var dayOfWeek = (int)date.DayOfWeek;
+            var weekStart = date.AddDays(-dayOfWeek);
+            var monthStart = new DateOnly(date.Year, date.Month, 1);
+            var actualWeekStart = weekStart < monthStart ? monthStart : weekStart;
+            return $"{date.Year}-{date.Month:D2}-{actualWeekStart.Day:D2}";
+        }
 
 
 
