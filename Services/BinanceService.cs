@@ -29,7 +29,7 @@ namespace Services
         private readonly TimeSpan _cacheDuration;
         private readonly ITradeRepository _tradeRepository;
 
-        public BinanceService(IBinanceApiClient binanceApiClient, IMemoryCache cache, IConfiguration configuration, ITradeRepository tradeRepository) {
+        public BinanceService(IBinanceApiClient binanceApiClient, IMemoryCache cache, IConfiguration configuration, ITradeRepository tradeRepository) { 
             _binanceApiClient = binanceApiClient;
             _cache = cache;
             _tradeRepository = tradeRepository;
@@ -123,7 +123,7 @@ namespace Services
                 Time = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(trade.Time)).UtcDateTime
             }).ToList();
 
-            
+
 
             return result;
         }
@@ -216,7 +216,7 @@ namespace Services
                 Notional = Convert.ToSingle(position.Notional)
             }).ToList();
 
-            
+
 
             return result;
         }
@@ -261,7 +261,7 @@ namespace Services
                 Time = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(order.UpdateTime)).UtcDateTime,
             }).ToList();
 
-            
+
 
             return result;
         }
@@ -278,6 +278,9 @@ namespace Services
                                                                     .Distinct(new FuturesAccountTradeComparer())
                                                                     .ToList();
 
+
+            combinedTrades = combinedTrades.OrderBy(x => x.Time).ToList();
+
             List<PositionHistoryResponseDto> positions = ProcessTrades(combinedTrades);
 
             return positions.TakeLast(330).ToList();
@@ -287,6 +290,7 @@ namespace Services
         {
             List<BalanceSnapshotResponseDto> balanceSnaphot = (await _tradeRepository.GetBalanceSnapshotAsync()).ToList();
             balanceSnaphot[balanceSnaphot.Count - 1].Balance = (await GetBalanceAsync()).Balance;
+            balanceSnaphot = balanceSnaphot.OrderBy(x => x.Date).ToList();
             return balanceSnaphot;
         }
 
@@ -344,7 +348,15 @@ namespace Services
 
         public virtual async Task<List<HistoryResponseDto>> GetHistoryAsync()
         {
-            List<FuturesIncomeHistoryResponseDto> incomeHistory;
+            List<FuturesIncomeHistoryResponseDto> incomeHistory = await GetIncomeHistoryAsync();
+
+            List<FuturesIncomeHistoryResponseDto> incomeHistoryDB = (await _tradeRepository.GetAllIncomeHistoryAsync()).ToList();
+
+            List<FuturesIncomeHistoryResponseDto> combinedIncomeHistory = incomeHistory
+                                                                    .Concat(incomeHistoryDB)
+                                                                    .Distinct(new FuturesIncomeHistoryComparer())
+                                                                    .ToList();
+
             List<FuturesIncomeHistoryResponseDto> cachedIncomeHistory = await GetIncomeHistoryAsync();
             var currentDate = DateTime.UtcNow.Date;
             var currentDayBnbItems = cachedIncomeHistory.Where(x => x.Asset == "BNB" && x.Time.Date == currentDate).ToList();
@@ -375,13 +387,8 @@ namespace Services
             {
                 incomeHistory = cachedIncomeHistory;
             }
-            List<FuturesIncomeHistoryResponseDto> incomeHistoryDB = (await _tradeRepository.GetAllIncomeHistoryAsync()).ToList();
-            List<FuturesIncomeHistoryResponseDto> combinedIncomeHistory = incomeHistory
-            .Concat(incomeHistoryDB)
-                                                                    .Distinct(new FuturesIncomeHistoryComparer())
-                                                                    .ToList();
 
-            var cutoffDate = DateTime.UtcNow.AddDays(-BinanceServiceConstants.DAYS_TO_FETCH);
+            var cutoffDate = DateTime.UtcNow.AddDays(-BinanceServiceConstants.DAYS_TO_FETCH - 1);
 
             var lastSixDays = combinedIncomeHistory
                 .Where(i => i.Time >= cutoffDate)
@@ -415,7 +422,7 @@ namespace Services
                 });
 
 
-            return dailyData.OrderBy(d => d.Date).ToList();
+            return dailyData.OrderBy(d => d.Date).TakeLast(BinanceServiceConstants.DAYS_TO_FETCH).ToList();
         }
         public virtual Task<DateTime> GetLastUpdatedTime()
         {
@@ -436,7 +443,7 @@ namespace Services
 
             try
             {
-                
+
                 var queryParams = new Dictionary<string, string>
                 {
                     ["symbol"] = "BNBUSDT"
@@ -519,7 +526,7 @@ namespace Services
                       .ForEach(s => s.Quantity = -Math.Abs(s.Quantity));
 
                 bool checkLong = dfLong.Count > 0;
-                
+
                 if (checkLong)
                 {
                     var positionsLong = GetPositionsCoinLong(dfLong);
@@ -603,7 +610,7 @@ namespace Services
                     closeTime = row.Time;
 
                     // Check if fully closed
-                    if (Math.Abs(Math.Round(currentPosition, 8)) < 9E-4 | Math.Abs(Math.Round(currentPosition, 8)) == 0)
+                    if (Math.Abs(Math.Round(currentPosition, 8)) < 9E-3 | Math.Abs(Math.Round(currentPosition, 8)) == 0)
                     {
                         var position = new PositionHistoryResponseDto
                         {
